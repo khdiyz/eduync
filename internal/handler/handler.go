@@ -62,10 +62,14 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			// roles.DELETE("/:id", h.deleteRole)
 		}
 
-		// courses := api.Group("/courses")
-		// {
-		// 	courses.POST("", h.createCourse)
-		// }
+		courses := api.Group("/courses")
+		{
+			courses.POST("", h.createCourse)
+			courses.GET("", h.getListCourse)
+			courses.GET("/:id", h.getCourseById)
+			courses.PUT("/:id", h.updateCourse)
+			courses.DELETE("/:id", h.deleteCourse)
+		}
 	}
 
 	return router

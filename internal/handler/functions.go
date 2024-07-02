@@ -4,6 +4,7 @@ import (
 	"edusync/internal/constants"
 	"edusync/internal/model"
 	"edusync/pkg/logger"
+	"errors"
 	"fmt"
 	"strconv"
 
@@ -64,3 +65,32 @@ func calculatePagination(page, pageSize int64) (offset, limit int64) {
 	return offset, limit
 }
 
+// User functions
+// func getUserId(c *gin.Context) (int64, error) {
+// 	id, ok := c.Get(userCtx)
+// 	if !ok {
+// 		return 0, errors.New("user id not found")
+// 	}
+
+// 	userId, ok := id.(int64)
+// 	if !ok {
+// 		return 0, errors.New("user id is of invalid type")
+// 	}
+
+// 	return userId, nil
+// }
+
+func getNullInt64Param(c *gin.Context, paramName string) (int64, error) {
+	paramData := c.Param(paramName)
+
+	if paramData != "" {
+		paramValue, err := strconv.ParseInt(paramData, 10, 64)
+		if err != nil {
+			return 0, fmt.Errorf("invalid param: %s", paramData)
+		}
+
+		return paramValue, nil
+	}
+
+	return 0, errors.New("param required")
+}

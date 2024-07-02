@@ -1,8 +1,10 @@
 package repository
 
 import (
+	"edusync/internal/constants"
 	"edusync/internal/model"
 	"edusync/pkg/logger"
+	"fmt"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -23,7 +25,7 @@ func (r *CourseWriterRepo) Create(input model.CourseCreateRequest) (int64, error
 	var id int64
 
 	query := `
-	INSERT INTO course (
+	INSERT INTO courses (
 		name,
 		description,
 		photo
@@ -39,4 +41,62 @@ func (r *CourseWriterRepo) Create(input model.CourseCreateRequest) (int64, error
 	}
 
 	return id, nil
+}
+
+func (r *CourseWriterRepo) Update(input model.CourseUpdateRequest) error {
+	query := `
+	UPDATE courses
+	SET
+		name = :name,
+		description = :description,
+		photo = :photo,
+		updated_at = now()
+	WHERE 
+		id = :id
+		AND deleted_at IS NULL;`
+
+	row, err := r.db.NamedExec(query, input)
+	if err != nil {
+		r.logger.Error(err)
+		return err
+	}
+
+	rowAffected, err := row.RowsAffected()
+	if err != nil {
+
+		fmt.Println("kirdi ")
+		r.logger.Error(err)
+		return err
+	}
+	if rowAffected == 0 {
+		return constants.ErrorNoRowsAffected
+	}
+
+	return nil
+}
+
+func (r *CourseWriterRepo) Delete(id int64) error {
+	query := `
+	UPDATE courses
+	SET
+		deleted_at = now()
+	WHERE 
+		id = $1
+		AND deleted_at IS NULL;`
+
+	row, err := r.db.Exec(query, id)
+	if err != nil {
+		r.logger.Error(err)
+		return err
+	}
+	rowAffected, err := row.RowsAffected()
+	if err != nil {
+		r.logger.Error(err)
+		return err
+	}
+	if rowAffected == 0 {
+		return constants.ErrorNoRowsAffected
+	}
+
+	return nil
 }

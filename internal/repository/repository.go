@@ -61,8 +61,12 @@ type CourseRepo struct {
 }
 
 type CourseReader interface {
+	GetList(pagination *model.Pagination) ([]model.Course, error)
+	GetById(id int64) (model.Course, error)
 }
 
 type CourseWriter interface {
 	Create(input model.CourseCreateRequest) (int64, error)
+	Update(input model.CourseUpdateRequest) error
+	Delete(id int64) error
 }

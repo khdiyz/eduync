@@ -13,10 +13,9 @@ type Service struct {
 	Authorization
 	Minio
 
-	UserReader
-	UserWriter
-
-	RoleReader
+	UserService
+	RoleService
+	CourseService
 }
 
 func NewService(repos repository.Repository, storage storage.Storage, logger logger.Logger) *Service {
@@ -24,10 +23,17 @@ func NewService(repos repository.Repository, storage storage.Storage, logger log
 		Authorization: NewAuthService(repos.UserRepo, logger),
 		Minio:         NewMinioService(storage, logger),
 
-		UserReader: NewUserReaderService(repos.UserRepo, logger),
-		UserWriter: NewUserWriterService(repos, logger),
-
-		RoleReader: NewRoleReaderService(repos.RoleRepo, logger),
+		UserService: UserService{
+			UserReader: NewUserReaderService(repos.UserRepo, logger),
+			UserWriter: NewUserWriterService(repos, logger),
+		},
+		RoleService: RoleService{
+			RoleReader: NewRoleReaderService(repos.RoleRepo, logger),
+		},
+		CourseService: CourseService{
+			CourseWriter: NewCourseWriterService(repos, logger),
+			CourseReader: NewCourseReaderService(repos, logger),
+		},
 	}
 }
 
@@ -45,6 +51,11 @@ type Minio interface {
 }
 
 // User Service
+type UserService struct {
+	UserReader
+	UserWriter
+}
+
 type UserReader interface {
 	GetByUsername(username string) (model.User, error)
 	GetById(id int64) (model.User, error)
@@ -55,6 +66,27 @@ type UserWriter interface {
 }
 
 // Role Service
+type RoleService struct {
+	RoleReader
+}
+
 type RoleReader interface {
 	GetList(pagination *model.Pagination) ([]model.Role, error)
+}
+
+// Course Service
+type CourseService struct {
+	CourseWriter
+	CourseReader
+}
+
+type CourseReader interface {
+	GetList(pagination *model.Pagination) ([]model.Course, error)
+	GetById(id int64) (model.Course, error)
+}
+
+type CourseWriter interface {
+	Create(input model.CourseCreateRequest) (int64, error)
+	Update(input model.CourseUpdateRequest) error
+	Delete(id int64) error
 }

@@ -19,7 +19,7 @@ var errorMapping = map[string]struct {
 	"no rows in result set":                          {codes.NotFound, "data is empty"},
 	"duplicate key value violates unique constraint": {codes.AlreadyExists, "variable value is already exists"},
 	"violates foreign key constraint":                {codes.InvalidArgument, "foreign key violation"},
-	"no rows affected":                               {codes.Internal, "variable value is not exists"},
+	"no rows affected":                               {codes.NotFound, "variable value is not exists"},
 }
 
 func ServiceError(err error, code codes.Code) error {
@@ -79,7 +79,7 @@ func ServiceErrorConvert(c *gin.Context, serviceError error) {
 
 	switch st.Code() {
 	case codes.Internal:
-		Error(c, Internal, nil)
+		Error(c, Internal, errors.New(err))
 	case codes.NotFound:
 		Error(c, NotFound, errors.New(err))
 	case codes.InvalidArgument:
