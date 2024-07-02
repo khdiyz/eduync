@@ -39,9 +39,9 @@ type Authorization interface {
 }
 
 type Minio interface {
-	UploadImage(image io.Reader, imageSize int64, contextType string) (file storage.File, err error)
-	UploadDoc(doc io.Reader, docSize int64, contextType string) (file storage.File, err error)
-	UploadExcel(doc io.Reader, docSize int64, contextType string) (file storage.File, err error)
+	UploadImage(image io.Reader, imageSize int64, contextType string) (storage.File, error)
+	UploadDoc(doc io.Reader, docSize int64, contextType string) (storage.File, error)
+	UploadExcel(doc io.Reader, docSize int64, contextType string) (storage.File, error)
 }
 
 // User Service

@@ -10,6 +10,7 @@ import (
 type Repository struct {
 	UserRepo
 	RoleRepo
+	CourseRepo
 }
 
 func NewRepository(db *sqlx.DB, logger logger.Logger) *Repository {
@@ -21,10 +22,14 @@ func NewRepository(db *sqlx.DB, logger logger.Logger) *Repository {
 		RoleRepo: RoleRepo{
 			RoleReader: NewRoleReaderRepo(db, logger),
 		},
+		CourseRepo: CourseRepo{
+			CourseWriter: NewCourseWriterRepo(db, logger),
+			CourseReader: NewCourseReaderRepo(db, logger),
+		},
 	}
 }
 
-// USER REPO
+// User Repo
 type UserRepo struct {
 	UserReader
 	UserWriter
@@ -39,7 +44,7 @@ type UserWriter interface {
 	Create(input model.UserCreateRequest) (int64, error)
 }
 
-// ROLE REPO
+// Role Repo
 type RoleRepo struct {
 	RoleReader
 }
@@ -47,4 +52,17 @@ type RoleRepo struct {
 type RoleReader interface {
 	GetList(pagination *model.Pagination) ([]model.Role, error)
 	GetById(id int64) (model.Role, error)
+}
+
+// Course Repo
+type CourseRepo struct {
+	CourseWriter
+	CourseReader
+}
+
+type CourseReader interface {
+}
+
+type CourseWriter interface {
+	Create(input model.CourseCreateRequest) (int64, error)
 }

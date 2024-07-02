@@ -42,10 +42,10 @@ func (h *Handler) InitRoutes() *gin.Engine {
 
 	api := router.Group("/api", h.userIdentity)
 	{
-		// minio := api.Group("/minio")
-		// {
-		// 	minio.POST("/upload-image", h.uploadImage)
-		// }
+		minio := api.Group("/minio")
+		{
+			minio.POST("/upload-image", h.uploadImage)
+		}
 
 		users := api.Group("/users")
 		{
