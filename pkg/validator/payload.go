@@ -11,12 +11,13 @@ import (
 )
 
 var mapHelepr = map[string]string{
-	"required":  "is a required field",
-	"email":     "is not a valid email address",
-	"lowercase": "must contain at least one lowercase letter",
-	"uppercase": "must contain at least one uppercase letter",
-	"numeric":   "must contain at least one digit",
-	"uzbphone":  "is not a valid phone number",
+	"required":   "is a required field",
+	"email":      "is not a valid email address",
+	"lowercase":  "must contain at least one lowercase letter",
+	"uppercase":  "must contain at least one uppercase letter",
+	"numeric":    "must contain at least one digit",
+	"uzbphone":   "is not a valid phone number",
+	"customDate": "is not a valid date format",
 }
 
 var needParam = []string{"min", "max", "containsany"}
@@ -27,6 +28,7 @@ func ValidatePayloads(payload interface{}) (err error) {
 
 	// Register the custom Uzbek phone number validation function
 	validate.RegisterValidation("uzbphone", uzbPhoneValidator)
+	validate.RegisterValidation("customDate", dateValidator)
 
 	var field, param, value, tag, message string
 

@@ -14,16 +14,20 @@ type User struct {
 	UpdatedAt   *time.Time `json:"updated_at" db:"updated_at"`
 }
 
-type UserCreateReq struct {
-	FullName    string `json:"full_name" db:"full_name"`
-	PhoneNumber string `json:"phone_number" db:"phone_number"`
-	BirthDate   string `json:"birth_date" db:"birth_date"`
+type UserCreateRequest struct {
+	FullName    string `json:"full_name" db:"full_name" validate:"required"`
+	PhoneNumber string `json:"phone_number" db:"phone_number" validate:"uzbphone,required"`
+	BirthDate   string `json:"birth_date" db:"birth_date" validate:"customDate,required"`
 	RoleId      int64  `json:"role_id" db:"role_id"`
-	Username    string `json:"username" db:"username"`
-	Password    string `json:"-" db:"password"`
+	Username    string `json:"username" db:"username" validate:"required"`
+	Password    string `json:"password" db:"password" validate:"required"`
 }
 
-type UserLoginReq struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
+type LoginRequest struct {
+	Username string `json:"username" default:"superadmin"`
+	Password string `json:"password" default:"P@$$w0rd2o24"`
+}
+
+type RefreshRequest struct {
+	Token string `json:"token" validate:"required"`
 }

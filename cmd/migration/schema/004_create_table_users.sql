@@ -13,6 +13,8 @@ CREATE TABLE "users" (
     FOREIGN KEY ("role_id") REFERENCES "roles"("id")
 );
 
+CREATE UNIQUE INDEX unique_username_not_deleted ON "users" ("username") WHERE "deleted_at" IS NULL;
+
 INSERT INTO "users" (
     "full_name",
     "phone_number",

@@ -19,7 +19,7 @@ func NewUserWriterRepo(db *sqlx.DB, logger logger.Logger) *UserWriterRepo {
 	}
 }
 
-func (r *UserWriterRepo) Create(input model.UserCreateReq) (int64, error) {
+func (r *UserWriterRepo) Create(input model.UserCreateRequest) (int64, error) {
 	var id int64
 
 	query := `

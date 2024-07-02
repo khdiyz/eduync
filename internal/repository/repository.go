@@ -9,6 +9,7 @@ import (
 
 type Repository struct {
 	UserRepo
+	RoleRepo
 }
 
 func NewRepository(db *sqlx.DB, logger logger.Logger) *Repository {
@@ -16,6 +17,9 @@ func NewRepository(db *sqlx.DB, logger logger.Logger) *Repository {
 		UserRepo: UserRepo{
 			UserReader: NewUserReaderRepo(db, logger),
 			UserWriter: NewUserWriterRepo(db, logger),
+		},
+		RoleRepo: RoleRepo{
+			RoleReader: NewRoleReaderRepo(db, logger),
 		},
 	}
 }
@@ -27,9 +31,20 @@ type UserRepo struct {
 }
 
 type UserReader interface {
-	GetByUsernameAndPassword(input model.UserLoginReq) (model.User, error)
+	GetByUsername(username string) (model.User, error)
+	GetById(id int64) (model.User, error)
 }
 
 type UserWriter interface {
-	Create(input model.UserCreateReq) (int64, error)
+	Create(input model.UserCreateRequest) (int64, error)
+}
+
+// ROLE REPO
+type RoleRepo struct {
+	RoleReader
+}
+
+type RoleReader interface {
+	GetList(pagination *model.Pagination) ([]model.Role, error)
+	GetById(id int64) (model.Role, error)
 }

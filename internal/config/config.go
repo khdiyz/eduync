@@ -24,8 +24,9 @@ type Config struct {
 	DBPostgreDsn    string
 	DBPostgreURL    string
 
-	JWTSecret  string
-	JWTExpired int
+	JWTSecret                string
+	JWTAccessExpirationHours int
+	JWTRefreshExpirationDays int
 
 	HashKey string
 
@@ -49,8 +50,9 @@ func GetConfig() *Config {
 			DBPostgreDsn:    cast.ToString(getOrReturnDefault("DB_POSTGRE_DSN", "")),
 			DBPostgreURL:    cast.ToString(getOrReturnDefault("DB_POSTGRE_URL", "")),
 
-			JWTSecret:  cast.ToString(getOrReturnDefault("JWT_SECRET", "")),
-			JWTExpired: cast.ToInt(getOrReturnDefault("JWT_EXPIRED", "")),
+			JWTSecret:                cast.ToString(getOrReturnDefault("JWT_SECRET", "")),
+			JWTAccessExpirationHours: cast.ToInt(getOrReturnDefault("JWT_ACCESS_EXPIRATION_HOURS", "")),
+			JWTRefreshExpirationDays: cast.ToInt(getOrReturnDefault("JWT_REFRESH_EXPIRATION_DAYS", "")),
 
 			HashKey: cast.ToString(getOrReturnDefault("HASH_KEY", "")),
 
