@@ -45,12 +45,12 @@ func (r *ExamTypeWriterRepo) Update(input model.ExamTypeUpdateRequest) error {
 	query := `
 	UPDATE course_exam_types
 	SET
-		course_id = :course_id,
 		name = :name,
 		max_ball = :max_ball,
 		updated_at = now()
 	WHERE 
 		id = :id
+		AND course_id = :course_id
 		AND deleted_at IS NULL;`
 
 	row, err := r.db.NamedExec(query, input)
@@ -71,16 +71,17 @@ func (r *ExamTypeWriterRepo) Update(input model.ExamTypeUpdateRequest) error {
 	return nil
 }
 
-func (r *ExamTypeWriterRepo) Delete(id int64) error {
+func (r *ExamTypeWriterRepo) Delete(courseId int64, id int64) error {
 	query := `
 	UPDATE course_exam_types
 	SET
 		deleted_at = now()
 	WHERE 
 		id = $1
+		AND course_id = $2
 		AND deleted_at IS NULL;`
 
-	row, err := r.db.Exec(query, id)
+	row, err := r.db.Exec(query, id, courseId)
 	if err != nil {
 		r.logger.Error(err)
 		return err

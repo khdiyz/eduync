@@ -100,10 +100,10 @@ type CourseWriter interface {
 type ExamTypeWriter interface {
 	Create(input model.ExamTypeCreateRequest) (int64, error)
 	Update(input model.ExamTypeUpdateRequest) error
-	Delete(id int64) error
+	Delete(courseId int64, id int64) error
 }
 
 type ExamTypeReader interface {
 	GetList(courseId int64, pagination *model.Pagination) ([]model.CourseExamType, error)
-	GetById(id int64) (model.CourseExamType, error)
+	GetById(courseId int64, examTypeId int64) (model.CourseExamType, error)
 }

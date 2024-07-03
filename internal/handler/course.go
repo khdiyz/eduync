@@ -274,3 +274,122 @@ func (h *Handler) getListCourseExamType(c *gin.Context) {
 		"pagination": pagination,
 	})
 }
+
+// Get List Course Exam Type
+// @Description Get List Course Exam Type
+// @Summary Get List Course Exam Type
+// @Tags Course
+// @Accept json
+// @Produce json
+// @Param id path int64 true "Course Id"
+// @Param examTypeId path int64 true "Exam Type Id"
+// @Success 200 {object} model.BaseResponse
+// @Failure 400 {object} model.BaseResponse
+// @Failure 404 {object} model.BaseResponse
+// @Failure 500 {object} model.BaseResponse
+// @Router /api/courses/{id}/exam-types/{examTypeId} [get]
+// @Security ApiKeyAuth
+func (h *Handler) getCourseExamType(c *gin.Context) {
+	courseId, err := getNullInt64Param(c, idQuery)
+	if err != nil {
+		errorResponse(c, BadRequest, err)
+		return
+	}
+
+	examTypeId, err := getNullInt64Param(c, "examTypeId")
+	if err != nil {
+		errorResponse(c, BadRequest, err)
+		return
+	}
+
+	examType, err := h.services.CourseService.ExamTypeReader.GetById(courseId, examTypeId)
+	if err != nil {
+		fromError(c, err)
+		return
+	}
+
+	successResponse(c, OK, examType)
+}
+
+// Update Course Exam Type
+// @Description Update Course Exam Type
+// @Summary Update Course Exam Type
+// @Tags Course
+// @Accept json
+// @Produce json
+// @Param id path int64 true "Course Id"
+// @Param examTypeId path int64 true "Exam Type Id"
+// @Param update body model.ExamTypeUpdateRequest true "Update Course"
+// @Success 200 {object} model.BaseResponse
+// @Failure 400 {object} model.BaseResponse
+// @Failure 404 {object} model.BaseResponse
+// @Failure 500 {object} model.BaseResponse
+// @Router /api/courses/{id}/exam-types/{examTypeId} [put]
+// @Security ApiKeyAuth
+func (h *Handler) updateCourseExamType(c *gin.Context) {
+	var (
+		err   error
+		input model.ExamTypeUpdateRequest
+	)
+
+	if err = c.ShouldBindJSON(&input); err != nil {
+		errorResponse(c, BadRequest, err)
+		return
+	}
+
+	input.CourseId, err = getNullInt64Param(c, idQuery)
+	if err != nil {
+		errorResponse(c, BadRequest, err)
+		return
+	}
+
+	input.Id, err = getNullInt64Param(c, "examTypeId")
+	if err != nil {
+		errorResponse(c, BadRequest, err)
+		return
+	}
+
+	err = h.services.CourseService.ExamTypeWriter.Update(input)
+	if err != nil {
+		fromError(c, err)
+		return
+	}
+
+	successResponse(c, OK, nil)
+}
+
+// Delete Course Exam Type
+// @Description Delete Course Exam Type
+// @Summary Delete Course Exam Type
+// @Tags Course
+// @Accept json
+// @Produce json
+// @Param id path int64 true "Course Id"
+// @Param examTypeId path int64 true "Exam Type Id"
+// @Success 200 {object} model.BaseResponse
+// @Failure 400 {object} model.BaseResponse
+// @Failure 404 {object} model.BaseResponse
+// @Failure 500 {object} model.BaseResponse
+// @Router /api/courses/{id}/exam-types/{examTypeId} [delete]
+// @Security ApiKeyAuth
+func (h *Handler) deleteCourseExamType(c *gin.Context) {
+	courseId, err := getNullInt64Param(c, idQuery)
+	if err != nil {
+		errorResponse(c, BadRequest, err)
+		return
+	}
+
+	examTypeId, err := getNullInt64Param(c, "examTypeId")
+	if err != nil {
+		errorResponse(c, BadRequest, err)
+		return
+	}
+
+	err = h.services.CourseService.ExamTypeWriter.Delete(courseId, examTypeId)
+	if err != nil {
+		fromError(c, err)
+		return
+	}
+
+	successResponse(c, OK, nil)
+}

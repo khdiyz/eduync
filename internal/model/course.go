@@ -42,7 +42,7 @@ type ExamTypeCreateRequest struct {
 
 type ExamTypeUpdateRequest struct {
 	Id       int64   `json:"-" db:"id"`
-	CourseId int64   `json:"course_id" db:"course_id"`
+	CourseId int64   `json:"-" db:"course_id"`
 	Name     string  `json:"name" db:"name"`
 	MaxBall  float32 `json:"max_ball" db:"max_ball"`
 }

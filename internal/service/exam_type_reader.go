@@ -29,8 +29,8 @@ func (s *ExamTypeReaderService) GetList(courseId int64, pagination *model.Pagina
 	return examTypes, nil
 }
 
-func (s *ExamTypeReaderService) GetById(id int64) (model.CourseExamType, error) {
-	examType, err := s.repo.CourseRepo.ExamTypeReader.GetById(id)
+func (s *ExamTypeReaderService) GetById(courseId int64, examTypeId int64) (model.CourseExamType, error) {
+	examType, err := s.repo.CourseRepo.ExamTypeReader.GetById(courseId, examTypeId)
 	if err != nil {
 		return model.CourseExamType{}, serviceError(err, codes.Internal)
 	}

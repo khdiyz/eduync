@@ -54,7 +54,7 @@ func (r *ExamTypeReaderRepo) GetList(courseId int64, pagination *model.Paginatio
 	return examTypes, nil
 }
 
-func (r *ExamTypeReaderRepo) GetById(id int64) (model.CourseExamType, error) {
+func (r *ExamTypeReaderRepo) GetById(courseId int64, examTypeId int64) (model.CourseExamType, error) {
 	var examType model.CourseExamType
 
 	query := `
@@ -68,9 +68,10 @@ func (r *ExamTypeReaderRepo) GetById(id int64) (model.CourseExamType, error) {
 	FROM course_exam_types
 	WHERE
 		deleted_at IS NULL
-		AND id = $1;`
+		AND course_id = $1
+		AND id = $2;`
 
-	if err := r.db.Get(&examType, query, id); err != nil {
+	if err := r.db.Get(&examType, query, courseId, examTypeId); err != nil {
 		return model.CourseExamType{}, err
 	}
 

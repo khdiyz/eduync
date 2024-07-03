@@ -44,8 +44,8 @@ func (s *ExamTypeWriterService) Update(input model.ExamTypeUpdateRequest) error 
 	return nil
 }
 
-func (s *ExamTypeWriterService) Delete(id int64) error {
-	err := s.repo.CourseRepo.ExamTypeWriter.Delete(id)
+func (s *ExamTypeWriterService) Delete(courseId int64, id int64) error {
+	err := s.repo.CourseRepo.ExamTypeWriter.Delete(courseId, id)
 	if err != nil {
 		return serviceError(err, codes.Internal)
 	}
