@@ -4,34 +4,29 @@ import (
 	"edusync/internal/model"
 	"edusync/internal/repository"
 	"edusync/pkg/logger"
-	"errors"
 
 	"google.golang.org/grpc/codes"
 )
 
-var (
-	errCourseDoesNotExists = errors.New("course with this id does not exist")
-)
-
-type ExamTypeWriterService struct {
+type LidWriterService struct {
 	repo   repository.Repository
 	logger logger.Logger
 }
 
-func NewExamTypeWriterService(repo repository.Repository, logger logger.Logger) *ExamTypeWriterService {
-	return &ExamTypeWriterService{
+func NewLidWriterService(repo repository.Repository, logger logger.Logger) *LidWriterService {
+	return &LidWriterService{
 		repo:   repo,
 		logger: logger,
 	}
 }
 
-func (s *ExamTypeWriterService) Create(input model.ExamTypeCreateRequest) (int64, error) {
+func (s *LidWriterService) Create(input model.LidCreateRequest) (int64, error) {
 	_, err := s.repo.CourseRepo.CourseReader.GetById(input.CourseId)
 	if err != nil {
 		return 0, serviceError(errCourseDoesNotExists, codes.InvalidArgument)
 	}
 
-	id, err := s.repo.CourseRepo.ExamTypeWriter.Create(input)
+	id, err := s.repo.LidRepo.LidWriter.Create(input)
 	if err != nil {
 		return 0, serviceError(err, codes.Internal)
 	}
@@ -39,13 +34,13 @@ func (s *ExamTypeWriterService) Create(input model.ExamTypeCreateRequest) (int64
 	return id, nil
 }
 
-func (s *ExamTypeWriterService) Update(input model.ExamTypeUpdateRequest) error {
+func (s *LidWriterService) Update(input model.LidUpdateRequest) error {
 	_, err := s.repo.CourseRepo.CourseReader.GetById(input.CourseId)
 	if err != nil {
 		return serviceError(errCourseDoesNotExists, codes.InvalidArgument)
 	}
 
-	err = s.repo.CourseRepo.ExamTypeWriter.Update(input)
+	err = s.repo.LidRepo.LidWriter.Update(input)
 	if err != nil {
 		return serviceError(err, codes.Internal)
 	}
@@ -53,8 +48,8 @@ func (s *ExamTypeWriterService) Update(input model.ExamTypeUpdateRequest) error 
 	return nil
 }
 
-func (s *ExamTypeWriterService) Delete(courseId int64, id int64) error {
-	err := s.repo.CourseRepo.ExamTypeWriter.Delete(courseId, id)
+func (s *LidWriterService) Delete(id int64) error {
+	err := s.repo.LidRepo.LidWriter.Delete(id)
 	if err != nil {
 		return serviceError(err, codes.Internal)
 	}

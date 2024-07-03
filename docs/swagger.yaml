@@ -50,6 +50,32 @@ definitions:
       name:
         type: string
     type: object
+  model.LidCreateRequest:
+    properties:
+      course_id:
+        type: integer
+      description:
+        type: string
+      full_name:
+        type: string
+      phone_number:
+        type: string
+    required:
+    - full_name
+    type: object
+  model.LidUpdateRequest:
+    properties:
+      course_id:
+        type: integer
+      description:
+        type: string
+      full_name:
+        type: string
+      phone_number:
+        type: string
+    required:
+    - full_name
+    type: object
   model.LoginRequest:
     properties:
       password:
@@ -284,7 +310,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: Get List Course
+      description: Get List Course Exam Type
       parameters:
       - description: Course Id
         in: path
@@ -324,7 +350,7 @@ paths:
             $ref: '#/definitions/model.BaseResponse'
       security:
       - ApiKeyAuth: []
-      summary: Get List Course
+      summary: Get List Course Exam Type
       tags:
       - Course
     post:
@@ -491,6 +517,192 @@ paths:
       summary: Update Course Exam Type
       tags:
       - Course
+  /api/lids:
+    get:
+      consumes:
+      - application/json
+      description: Get List Lid
+      parameters:
+      - default: 10
+        description: pageSize
+        in: query
+        name: pageSize
+        required: true
+        type: integer
+      - default: 1
+        description: page
+        in: query
+        name: page
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get List Lid
+      tags:
+      - Lid
+    post:
+      consumes:
+      - application/json
+      description: Create Lid
+      parameters:
+      - description: Create Lid
+        in: body
+        name: create
+        required: true
+        schema:
+          $ref: '#/definitions/model.LidCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create Lid
+      tags:
+      - Lid
+  /api/lids/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Lid
+      parameters:
+      - description: Lid Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete Lid
+      tags:
+      - Lid
+    get:
+      consumes:
+      - application/json
+      description: Get Lid By Id
+      parameters:
+      - description: Lid Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Lid By Id
+      tags:
+      - Lid
+    put:
+      consumes:
+      - application/json
+      description: Update Lid
+      parameters:
+      - description: Lid Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update Lid
+        in: body
+        name: update
+        required: true
+        schema:
+          $ref: '#/definitions/model.LidUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update Lid
+      tags:
+      - Lid
   /api/minio/upload-image:
     post:
       consumes:

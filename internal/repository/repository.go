@@ -11,6 +11,7 @@ type Repository struct {
 	UserRepo
 	RoleRepo
 	CourseRepo
+	LidRepo
 }
 
 func NewRepository(db *sqlx.DB, logger logger.Logger) *Repository {
@@ -27,6 +28,10 @@ func NewRepository(db *sqlx.DB, logger logger.Logger) *Repository {
 			CourseReader:   NewCourseReaderRepo(db, logger),
 			ExamTypeWriter: NewExamTypeWriterRepo(db, logger),
 			ExamTypeReader: NewExamTypeReaderRepo(db, logger),
+		},
+		LidRepo: LidRepo{
+			LidReader: NewLidReaderRepo(db, logger),
+			LidWriter: NewLidWriterRepo(db, logger),
 		},
 	}
 }
@@ -84,4 +89,21 @@ type ExamTypeWriter interface {
 type ExamTypeReader interface {
 	GetList(courseId int64, pagination *model.Pagination) ([]model.CourseExamType, error)
 	GetById(courseId int64, examTypeId int64) (model.CourseExamType, error)
+}
+
+// Lids Repo
+type LidRepo struct {
+	LidReader
+	LidWriter
+}
+
+type LidReader interface {
+	GetList(pagination *model.Pagination) ([]model.Lid, error)
+	GetById(id int64) (model.Lid, error)
+}
+
+type LidWriter interface {
+	Create(input model.LidCreateRequest) (int64, error)
+	Update(input model.LidUpdateRequest) error
+	Delete(id int64) error
 }

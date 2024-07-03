@@ -16,6 +16,7 @@ type Service struct {
 	UserService
 	RoleService
 	CourseService
+	LidService
 }
 
 func NewService(repos repository.Repository, storage storage.Storage, logger logger.Logger) *Service {
@@ -36,6 +37,10 @@ func NewService(repos repository.Repository, storage storage.Storage, logger log
 
 			ExamTypeWriter: NewExamTypeWriterService(repos, logger),
 			ExamTypeReader: NewExamTypeReaderService(repos, logger),
+		},
+		LidService: LidService{
+			LidWriter: NewLidWriterService(repos, logger),
+			LidReader: NewLidReaderService(repos, logger),
 		},
 	}
 }
@@ -106,4 +111,20 @@ type ExamTypeWriter interface {
 type ExamTypeReader interface {
 	GetList(courseId int64, pagination *model.Pagination) ([]model.CourseExamType, error)
 	GetById(courseId int64, examTypeId int64) (model.CourseExamType, error)
+}
+
+type LidService struct {
+	LidWriter
+	LidReader
+}
+
+type LidWriter interface {
+	Create(input model.LidCreateRequest) (int64, error)
+	Update(input model.LidUpdateRequest) error
+	Delete(id int64) error
+}
+
+type LidReader interface {
+	GetList(pagination *model.Pagination) ([]model.Lid, error)
+	GetById(id int64) (model.Lid, error)
 }

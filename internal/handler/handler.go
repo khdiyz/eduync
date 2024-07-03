@@ -79,6 +79,15 @@ func (h *Handler) InitRoutes() *gin.Engine {
 				examTypes.DELETE("/:examTypeId", h.deleteCourseExamType)
 			}
 		}
+
+		lids := api.Group("/lids")
+		{
+			lids.POST("", h.createLid)
+			lids.GET("", h.getListLid)
+			lids.GET("/:id", h.getLidById)
+			lids.PUT("/:id", h.updateLid)
+			lids.DELETE("/:id", h.deleteLid)
+		}
 	}
 
 	return router

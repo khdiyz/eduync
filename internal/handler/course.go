@@ -110,9 +110,7 @@ func (h *Handler) getCourseById(c *gin.Context) {
 		return
 	}
 
-	successResponse(c, OK, gin.H{
-		"course": course,
-	})
+	successResponse(c, OK, course)
 }
 
 // Update Course
@@ -235,9 +233,9 @@ func (h *Handler) createCourseExamType(c *gin.Context) {
 	})
 }
 
-// Get List Course
-// @Description Get List Course
-// @Summary Get List Course
+// Get List Course Exam Type
+// @Description Get List Course Exam Type
+// @Summary Get List Course Exam Type
 // @Tags Course
 // @Accept json
 // @Produce json
