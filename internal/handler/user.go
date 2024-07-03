@@ -2,7 +2,6 @@ package handler
 
 import (
 	"edusync/internal/model"
-	"edusync/pkg/response"
 	"edusync/pkg/validator"
 
 	"github.com/gin-gonic/gin"
@@ -27,22 +26,22 @@ func (h *Handler) createUser(c *gin.Context) {
 		input model.UserCreateRequest
 	)
 	if err = c.ShouldBindJSON(&input); err != nil {
-		response.Error(c, response.BadRequest, err)
+		errorResponse(c, BadRequest, err)
 		return
 	}
 
 	if err := validator.ValidatePayloads(input); err != nil {
-		response.Error(c, response.BadRequest, err)
+		errorResponse(c, BadRequest, err)
 		return
 	}
 
 	id, err := h.services.UserWriter.Create(input)
 	if err != nil {
-		response.ServiceErrorConvert(c, err)
+		fromError(c, err)
 		return
 	}
 
-	response.Success(c, response.Created, gin.H{
+	successResponse(c, Created, gin.H{
 		"id": id,
 	})
 }

@@ -1,8 +1,6 @@
 package handler
 
 import (
-	"edusync/pkg/response"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -23,17 +21,17 @@ import (
 func (h *Handler) getListRole(c *gin.Context) {
 	pagination, err := listPagination(c)
 	if err != nil {
-		response.Error(c, response.BadRequest, err)
+		errorResponse(c, BadRequest, err)
 		return
 	}
 
 	roles, err := h.services.RoleReader.GetList(&pagination)
 	if err != nil {
-		response.ServiceErrorConvert(c, err)
+		fromError(c, err)
 		return
 	}
 
-	response.Success(c, response.OK, gin.H{
+	successResponse(c, OK, gin.H{
 		"list":       roles,
 		"pagination": pagination,
 	})

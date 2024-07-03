@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"edusync/pkg/response"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -16,24 +15,29 @@ const (
 func (h *Handler) userIdentity(c *gin.Context) {
 	header := c.GetHeader(authorizationHeader)
 	if header == "" {
-		response.Abort(c, "empty auth header")
+		abortResponse(c, "empty auth header")
 		return
 	}
 
 	headerParts := strings.Split(header, " ")
 	if len(headerParts) != 2 || headerParts[0] != "Bearer" {
-		response.Abort(c, "invalid auth header")
+		abortResponse(c, "invalid auth header")
 		return
 	}
 
 	if len(headerParts[1]) == 0 {
-		response.Abort(c, "token is empty")
+		abortResponse(c, "token is empty")
 		return
 	}
 
 	claims, err := h.services.Authorization.ParseToken(headerParts[1])
 	if err != nil {
-		response.Abort(c, err.Error())
+		abortResponse(c, err.Error())
+		return
+	}
+
+	if claims.Type != "access" {
+		abortResponse(c, "invalid token type")
 		return
 	}
 

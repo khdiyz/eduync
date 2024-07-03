@@ -4,7 +4,6 @@ import (
 	"edusync/internal/model"
 	"edusync/internal/repository"
 	"edusync/pkg/logger"
-	"edusync/pkg/response"
 
 	"google.golang.org/grpc/codes"
 )
@@ -24,7 +23,7 @@ func NewRoleReaderService(repo repository.RoleRepo, logger logger.Logger) *RoleR
 func (s *RoleReaderService) GetList(pagination *model.Pagination) ([]model.Role, error) {
 	roles, err := s.repo.RoleReader.GetList(pagination)
 	if err != nil {
-		return nil, response.ServiceError(err, codes.Internal)
+		return nil, serviceError(err, codes.Internal)
 	}
 
 	return roles, nil

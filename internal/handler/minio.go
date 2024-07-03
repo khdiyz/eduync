@@ -2,7 +2,6 @@ package handler
 
 import (
 	"edusync/pkg/logger"
-	"edusync/pkg/response"
 	"errors"
 	"io"
 	"mime/multipart"
@@ -42,27 +41,27 @@ const (
 func (h *Handler) uploadImage(c *gin.Context) {
 	file, err := c.FormFile("file")
 	if err != nil {
-		response.Error(c, response.BadRequest, err)
+		errorResponse(c, BadRequest, err)
 		return
 	}
 
 	imageContentType := file.Header[contentType][0]
 	if imageContentType != jpegContentType && imageContentType != jpgContentType && imageContentType != pngContentType {
-		response.Error(c, response.BadRequest, errors.New("invalid file format"))
+		errorResponse(c, BadRequest, errors.New("invalid file format"))
 		return
 	}
 
 	var fileIO io.Reader
 	fileMultipart, err := file.Open()
 	if err != nil {
-		response.Error(c, response.BadRequest, err)
+		errorResponse(c, BadRequest, err)
 		return
 	}
 
 	fileIO = fileMultipart
 	imageFile, err := h.services.Minio.UploadImage(fileIO, file.Size, imageContentType)
 	if err != nil {
-		response.Error(c, response.BadRequest, err)
+		errorResponse(c, BadRequest, err)
 		return
 	}
 
@@ -73,5 +72,5 @@ func (h *Handler) uploadImage(c *gin.Context) {
 		}
 	}(fileMultipart)
 
-	response.Success(c, response.OK, imageFile)
+	successResponse(c, OK, imageFile)
 }

@@ -2,7 +2,6 @@ package handler
 
 import (
 	"edusync/internal/model"
-	"edusync/pkg/response"
 	"edusync/pkg/validator"
 	"errors"
 
@@ -24,22 +23,22 @@ import (
 func (h *Handler) login(c *gin.Context) {
 	var input model.LoginRequest
 	if err := c.ShouldBindJSON(&input); err != nil {
-		response.Error(c, response.BadRequest, err)
+		errorResponse(c, BadRequest, err)
 		return
 	}
 
 	if err := validator.ValidatePayloads(input); err != nil {
-		response.Error(c, response.BadRequest, err)
+		errorResponse(c, BadRequest, err)
 		return
 	}
 
 	accessToken, refreshToken, err := h.services.Authorization.Login(input)
 	if err != nil {
-		response.ServiceErrorConvert(c, err)
+		fromError(c, err)
 		return
 	}
 
-	response.Success(c, response.OK, gin.H{
+	successResponse(c, OK, gin.H{
 		"accessToken":  accessToken.Token,
 		"refreshToken": refreshToken.Token,
 		"user":         accessToken.User,
@@ -65,39 +64,39 @@ func (h *Handler) refresh(c *gin.Context) {
 	)
 
 	if err = c.ShouldBindJSON(&input); err != nil {
-		response.Error(c, response.BadRequest, err)
+		errorResponse(c, BadRequest, err)
 		return
 	}
 
 	if err = validator.ValidatePayloads(input); err != nil {
-		response.Error(c, response.BadRequest, err)
+		errorResponse(c, BadRequest, err)
 		return
 	}
 
 	claims, err := h.services.Authorization.ParseToken(input.Token)
 	if err != nil {
-		response.Abort(c, err.Error())
+		abortResponse(c, err.Error())
 		return
 	}
 
 	if claims.Type != "refresh" {
-		response.Error(c, response.BadRequest, errors.New("token type must be refresh"))
+		errorResponse(c, BadRequest, errors.New("token type must be refresh"))
 		return
 	}
 
 	user, err := h.services.UserReader.GetById(claims.UserId)
 	if err != nil {
-		response.ServiceErrorConvert(c, err)
+		fromError(c, err)
 		return
 	}
 
 	accessToken, refreshToken, err := h.services.Authorization.GenerateTokens(user)
 	if err != nil {
-		response.ServiceErrorConvert(c, err)
+		fromError(c, err)
 		return
 	}
 
-	response.Success(c, response.OK, gin.H{
+	successResponse(c, OK, gin.H{
 		"accessToken":  accessToken.Token,
 		"refreshToken": refreshToken.Token,
 		"user":         accessToken.User,

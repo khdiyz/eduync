@@ -2,7 +2,6 @@ package handler
 
 import (
 	"edusync/internal/model"
-	"edusync/pkg/response"
 	"edusync/pkg/validator"
 
 	"github.com/gin-gonic/gin"
@@ -28,22 +27,22 @@ func (h *Handler) createCourse(c *gin.Context) {
 	)
 
 	if err = c.ShouldBindJSON(&input); err != nil {
-		response.Error(c, response.BadRequest, err)
+		errorResponse(c, BadRequest, err)
 		return
 	}
 
 	if err := validator.ValidatePayloads(input); err != nil {
-		response.Error(c, response.BadRequest, err)
+		errorResponse(c, BadRequest, err)
 		return
 	}
 
 	id, err := h.services.CourseService.CourseWriter.Create(input)
 	if err != nil {
-		response.ServiceErrorConvert(c, err)
+		fromError(c, err)
 		return
 	}
 
-	response.Success(c, response.Created, gin.H{
+	successResponse(c, Created, gin.H{
 		"id": id,
 	})
 }
@@ -65,17 +64,17 @@ func (h *Handler) createCourse(c *gin.Context) {
 func (h *Handler) getListCourse(c *gin.Context) {
 	pagination, err := listPagination(c)
 	if err != nil {
-		response.Error(c, response.BadRequest, err)
+		errorResponse(c, BadRequest, err)
 		return
 	}
 
 	roles, err := h.services.CourseService.CourseReader.GetList(&pagination)
 	if err != nil {
-		response.ServiceErrorConvert(c, err)
+		fromError(c, err)
 		return
 	}
 
-	response.Success(c, response.OK, gin.H{
+	successResponse(c, OK, gin.H{
 		"list":       roles,
 		"pagination": pagination,
 	})
@@ -97,17 +96,17 @@ func (h *Handler) getListCourse(c *gin.Context) {
 func (h *Handler) getCourseById(c *gin.Context) {
 	id, err := getNullInt64Param(c, "id")
 	if err != nil {
-		response.Error(c, response.BadRequest, err)
+		errorResponse(c, BadRequest, err)
 		return
 	}
 
 	course, err := h.services.CourseService.CourseReader.GetById(id)
 	if err != nil {
-		response.ServiceErrorConvert(c, err)
+		fromError(c, err)
 		return
 	}
 
-	response.Success(c, response.OK, gin.H{
+	successResponse(c, OK, gin.H{
 		"course": course,
 	})
 }
@@ -130,29 +129,29 @@ func (h *Handler) updateCourse(c *gin.Context) {
 	var input model.CourseUpdateRequest
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-		response.Error(c, response.BadRequest, err)
+		errorResponse(c, BadRequest, err)
 		return
 	}
 
 	if err := validator.ValidatePayloads(input); err != nil {
-		response.Error(c, response.BadRequest, err)
+		errorResponse(c, BadRequest, err)
 		return
 	}
 
 	id, err := getNullInt64Param(c, "id")
 	if err != nil {
-		response.Error(c, response.BadRequest, err)
+		errorResponse(c, BadRequest, err)
 		return
 	}
 	input.Id = id
 
 	err = h.services.CourseService.CourseWriter.Update(input)
 	if err != nil {
-		response.ServiceErrorConvert(c, err)
+		fromError(c, err)
 		return
 	}
 
-	response.Success(c, response.OK, nil)
+	successResponse(c, OK, nil)
 }
 
 // Delete Course
@@ -171,15 +170,15 @@ func (h *Handler) updateCourse(c *gin.Context) {
 func (h *Handler) deleteCourse(c *gin.Context) {
 	id, err := getNullInt64Param(c, "id")
 	if err != nil {
-		response.Error(c, response.BadRequest, err)
+		errorResponse(c, BadRequest, err)
 		return
 	}
 
 	err = h.services.CourseService.CourseWriter.Delete(id)
 	if err != nil {
-		response.ServiceErrorConvert(c, err)
+		fromError(c, err)
 		return
 	}
 
-	response.Success(c, response.OK, nil)
+	successResponse(c, OK, nil)
 }

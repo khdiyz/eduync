@@ -8,7 +8,6 @@ import (
 	"edusync/internal/repository"
 	"edusync/pkg/helper"
 	"edusync/pkg/logger"
-	"edusync/pkg/response"
 	"errors"
 	"time"
 
@@ -50,7 +49,7 @@ func (s *AuthService) CreateToken(user model.User, tokenType string, expiresAt t
 
 	token, err := jwtToken.SignedString([]byte(config.GetConfig().JWTSecret))
 	if err != nil {
-		return nil, response.ServiceError(err, codes.Internal)
+		return nil, serviceError(err, codes.Internal)
 	}
 
 	return &model.Token{
@@ -102,18 +101,18 @@ func (s *AuthService) Login(input model.LoginRequest) (*model.Token, *model.Toke
 	user, err := s.repo.GetByUsername(input.Username)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, nil, response.ServiceError(errors.New("wrong username or password"), codes.Unauthenticated)
+			return nil, nil, serviceError(errors.New("wrong username or password"), codes.Unauthenticated)
 		}
-		return nil, nil, response.ServiceError(err, codes.Internal)
+		return nil, nil, serviceError(err, codes.Internal)
 	}
 
 	hashPassword, err := helper.GenerateHash(input.Password)
 	if err != nil {
-		return nil, nil, response.ServiceError(err, codes.Internal)
+		return nil, nil, serviceError(err, codes.Internal)
 	}
 
 	if user.Password != hashPassword {
-		return nil, nil, response.ServiceError(errors.New("wrong username or password"), codes.Unauthenticated)
+		return nil, nil, serviceError(errors.New("wrong username or password"), codes.Unauthenticated)
 	}
 
 	return s.GenerateTokens(user)

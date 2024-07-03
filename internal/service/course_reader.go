@@ -6,7 +6,6 @@ import (
 	"edusync/internal/repository"
 	"edusync/internal/storage"
 	"edusync/pkg/logger"
-	"edusync/pkg/response"
 
 	"google.golang.org/grpc/codes"
 )
@@ -26,7 +25,7 @@ func NewCourseReaderService(repo repository.Repository, logger logger.Logger) *C
 func (s *CourseReaderService) GetList(pagination *model.Pagination) ([]model.Course, error) {
 	courses, err := s.repo.CourseRepo.CourseReader.GetList(pagination)
 	if err != nil {
-		return nil, response.ServiceError(err, codes.Internal)
+		return nil, serviceError(err, codes.Internal)
 	}
 
 	cfg := config.GetConfig()
@@ -43,7 +42,7 @@ func (s *CourseReaderService) GetList(pagination *model.Pagination) ([]model.Cou
 func (s *CourseReaderService) GetById(id int64) (model.Course, error) {
 	course, err := s.repo.CourseRepo.CourseReader.GetById(id)
 	if err != nil {
-		return model.Course{}, response.ServiceError(err, codes.Internal)
+		return model.Course{}, serviceError(err, codes.Internal)
 	}
 
 	if course.Photo != "" {
