@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: edusync-app
+    environment:
+      - TZ=Asia/Tashkent
+    ports:
+      - "8080:8080" # Adjust the port mapping as needed
+    volumes:
+      - .:/app
+    command: ["/app/app"] # Ensure this matches the path to the built executable in the container
+    restart: always
+
+# You can add other services such as databases here if needed
