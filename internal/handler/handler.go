@@ -69,6 +69,12 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			courses.GET("/:id", h.getCourseById)
 			courses.PUT("/:id", h.updateCourse)
 			courses.DELETE("/:id", h.deleteCourse)
+
+			examTypes := courses.Group("/:id/exam-types")
+			{
+				examTypes.POST("", h.createCourseExamType)
+				examTypes.GET("", h.getListCourseExamType)
+			}
 		}
 	}
 

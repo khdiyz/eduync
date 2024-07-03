@@ -23,8 +23,10 @@ func NewRepository(db *sqlx.DB, logger logger.Logger) *Repository {
 			RoleReader: NewRoleReaderRepo(db, logger),
 		},
 		CourseRepo: CourseRepo{
-			CourseWriter: NewCourseWriterRepo(db, logger),
-			CourseReader: NewCourseReaderRepo(db, logger),
+			CourseWriter:   NewCourseWriterRepo(db, logger),
+			CourseReader:   NewCourseReaderRepo(db, logger),
+			ExamTypeWriter: NewExamTypeWriterRepo(db, logger),
+			ExamTypeReader: NewExamTypeReaderRepo(db, logger),
 		},
 	}
 }
@@ -58,6 +60,8 @@ type RoleReader interface {
 type CourseRepo struct {
 	CourseWriter
 	CourseReader
+	ExamTypeWriter
+	ExamTypeReader
 }
 
 type CourseReader interface {
@@ -69,4 +73,15 @@ type CourseWriter interface {
 	Create(input model.CourseCreateRequest) (int64, error)
 	Update(input model.CourseUpdateRequest) error
 	Delete(id int64) error
+}
+
+type ExamTypeWriter interface {
+	Create(input model.ExamTypeCreateRequest) (int64, error)
+	Update(input model.ExamTypeUpdateRequest) error
+	Delete(id int64) error
+}
+
+type ExamTypeReader interface {
+	GetList(courseId int64, pagination *model.Pagination) ([]model.CourseExamType, error)
+	GetById(id int64) (model.CourseExamType, error)
 }

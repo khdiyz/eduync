@@ -34,6 +34,15 @@ definitions:
     required:
     - name
     type: object
+  model.ExamTypeCreateRequest:
+    properties:
+      max_ball:
+        type: number
+      name:
+        type: string
+    required:
+    - name
+    type: object
   model.LoginRequest:
     properties:
       password:
@@ -262,6 +271,93 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Update Course
+      tags:
+      - Course
+  /api/courses/{id}/exam-types:
+    get:
+      consumes:
+      - application/json
+      description: Get List Course
+      parameters:
+      - description: Course Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - default: 10
+        description: pageSize
+        in: query
+        name: pageSize
+        required: true
+        type: integer
+      - default: 1
+        description: page
+        in: query
+        name: page
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get List Course
+      tags:
+      - Course
+    post:
+      consumes:
+      - application/json
+      description: Create Course Exam Type
+      parameters:
+      - description: Course Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Create Course
+        in: body
+        name: create
+        required: true
+        schema:
+          $ref: '#/definitions/model.ExamTypeCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create Course Exam Type
       tags:
       - Course
   /api/minio/upload-image:

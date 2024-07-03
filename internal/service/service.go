@@ -33,6 +33,9 @@ func NewService(repos repository.Repository, storage storage.Storage, logger log
 		CourseService: CourseService{
 			CourseWriter: NewCourseWriterService(repos, logger),
 			CourseReader: NewCourseReaderService(repos, logger),
+
+			ExamTypeWriter: NewExamTypeWriterService(repos, logger),
+			ExamTypeReader: NewExamTypeReaderService(repos, logger),
 		},
 	}
 }
@@ -78,6 +81,9 @@ type RoleReader interface {
 type CourseService struct {
 	CourseWriter
 	CourseReader
+
+	ExamTypeWriter
+	ExamTypeReader
 }
 
 type CourseReader interface {
@@ -89,4 +95,15 @@ type CourseWriter interface {
 	Create(input model.CourseCreateRequest) (int64, error)
 	Update(input model.CourseUpdateRequest) error
 	Delete(id int64) error
+}
+
+type ExamTypeWriter interface {
+	Create(input model.ExamTypeCreateRequest) (int64, error)
+	Update(input model.ExamTypeUpdateRequest) error
+	Delete(id int64) error
+}
+
+type ExamTypeReader interface {
+	GetList(courseId int64, pagination *model.Pagination) ([]model.CourseExamType, error)
+	GetById(id int64) (model.CourseExamType, error)
 }

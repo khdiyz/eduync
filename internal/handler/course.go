@@ -7,6 +7,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+var (
+	idQuery = "id"
+)
+
 // Create Course
 // @Description Create Course
 // @Summary Create Course
@@ -94,7 +98,7 @@ func (h *Handler) getListCourse(c *gin.Context) {
 // @Router /api/courses/{id} [get]
 // @Security ApiKeyAuth
 func (h *Handler) getCourseById(c *gin.Context) {
-	id, err := getNullInt64Param(c, "id")
+	id, err := getNullInt64Param(c, idQuery)
 	if err != nil {
 		errorResponse(c, BadRequest, err)
 		return
@@ -138,7 +142,7 @@ func (h *Handler) updateCourse(c *gin.Context) {
 		return
 	}
 
-	id, err := getNullInt64Param(c, "id")
+	id, err := getNullInt64Param(c, idQuery)
 	if err != nil {
 		errorResponse(c, BadRequest, err)
 		return
@@ -168,7 +172,7 @@ func (h *Handler) updateCourse(c *gin.Context) {
 // @Router /api/courses/{id} [delete]
 // @Security ApiKeyAuth
 func (h *Handler) deleteCourse(c *gin.Context) {
-	id, err := getNullInt64Param(c, "id")
+	id, err := getNullInt64Param(c, idQuery)
 	if err != nil {
 		errorResponse(c, BadRequest, err)
 		return
@@ -181,4 +185,92 @@ func (h *Handler) deleteCourse(c *gin.Context) {
 	}
 
 	successResponse(c, OK, nil)
+}
+
+// Create Course Exam Type
+// @Description Create Course Exam Type
+// @Summary Create Course Exam Type
+// @Tags Course
+// @Accept json
+// @Produce json
+// @Param id path int64 true "Course Id"
+// @Param create body model.ExamTypeCreateRequest true "Create Course"
+// @Success 200 {object} model.BaseResponse
+// @Failure 400 {object} model.BaseResponse
+// @Failure 404 {object} model.BaseResponse
+// @Failure 500 {object} model.BaseResponse
+// @Router /api/courses/{id}/exam-types [post]
+// @Security ApiKeyAuth
+func (h *Handler) createCourseExamType(c *gin.Context) {
+	var (
+		err   error
+		input model.ExamTypeCreateRequest
+	)
+
+	id, err := getNullInt64Param(c, idQuery)
+	if err != nil {
+		errorResponse(c, BadRequest, err)
+		return
+	}
+
+	if err = c.ShouldBindJSON(&input); err != nil {
+		errorResponse(c, BadRequest, err)
+		return
+	}
+	input.CourseId = id
+
+	if err := validator.ValidatePayloads(input); err != nil {
+		errorResponse(c, BadRequest, err)
+		return
+	}
+
+	id, err = h.services.CourseService.ExamTypeWriter.Create(input)
+	if err != nil {
+		fromError(c, err)
+		return
+	}
+
+	successResponse(c, Created, gin.H{
+		"id": id,
+	})
+}
+
+// Get List Course
+// @Description Get List Course
+// @Summary Get List Course
+// @Tags Course
+// @Accept json
+// @Produce json
+// @Param id path int64 true "Course Id"
+// @Param pageSize query int64 true "pageSize" default(10)
+// @Param page  query int64 true "page" default(1)
+// @Success 200 {object} model.BaseResponse
+// @Failure 400 {object} model.BaseResponse
+// @Failure 404 {object} model.BaseResponse
+// @Failure 500 {object} model.BaseResponse
+// @Router /api/courses/{id}/exam-types [get]
+// @Security ApiKeyAuth
+func (h *Handler) getListCourseExamType(c *gin.Context) {
+	id, err := getNullInt64Param(c, idQuery)
+	if err != nil {
+		errorResponse(c, BadRequest, err)
+		return
+	}
+
+	pagination, err := listPagination(c)
+	if err != nil {
+		errorResponse(c, BadRequest, err)
+		return
+	}
+
+	examTypes, err := h.services.CourseService.ExamTypeReader.GetList(id, &pagination)
+	if err != nil {
+		fromError(c, err)
+		return
+	}
+
+	successResponse(c, OK, gin.H{
+		"list":       examTypes,
+		"pagination": pagination,
+	})
 }

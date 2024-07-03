@@ -59,7 +59,7 @@ func (r *RoleReaderRepo) GetById(id int64) (model.Role, error) {
 	SELECT
 		id,
 		name,
-		COALESCE(description, ''),
+		COALESCE(description, '') AS description,
 		created_at,
 		updated_at
 	FROM roles

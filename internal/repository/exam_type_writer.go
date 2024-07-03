@@ -8,33 +8,32 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type CourseWriterRepo struct {
+type ExamTypeWriterRepo struct {
 	db     *sqlx.DB
 	logger logger.Logger
 }
 
-func NewCourseWriterRepo(db *sqlx.DB, logger logger.Logger) *CourseWriterRepo {
-	return &CourseWriterRepo{
+func NewExamTypeWriterRepo(db *sqlx.DB, logger logger.Logger) *ExamTypeWriterRepo {
+	return &ExamTypeWriterRepo{
 		db:     db,
 		logger: logger,
 	}
 }
 
-func (r *CourseWriterRepo) Create(input model.CourseCreateRequest) (int64, error) {
+func (r *ExamTypeWriterRepo) Create(input model.ExamTypeCreateRequest) (int64, error) {
 	var id int64
 
 	query := `
-	INSERT INTO courses (
+	INSERT INTO course_exam_types(
+		course_id,
 		name,
-		description,
-		photo
-	) VALUES ($1, $2, $3) RETURNING id;`
+		max_ball
+	) VALUES (
+		$1, $2, $3
+	) RETURNING id;`
 
-	if err := r.db.Get(&id, query,
-		input.Name,
-		input.Description,
-		input.Photo,
-	); err != nil {
+	err := r.db.Get(&id, query, input.CourseId, input.Name, input.MaxBall)
+	if err != nil {
 		r.logger.Error(err)
 		return 0, err
 	}
@@ -42,13 +41,13 @@ func (r *CourseWriterRepo) Create(input model.CourseCreateRequest) (int64, error
 	return id, nil
 }
 
-func (r *CourseWriterRepo) Update(input model.CourseUpdateRequest) error {
+func (r *ExamTypeWriterRepo) Update(input model.ExamTypeUpdateRequest) error {
 	query := `
-	UPDATE courses
+	UPDATE course_exam_types
 	SET
+		course_id = :course_id,
 		name = :name,
-		description = :description,
-		photo = :photo,
+		max_ball = :max_ball,
 		updated_at = now()
 	WHERE 
 		id = :id
@@ -72,9 +71,9 @@ func (r *CourseWriterRepo) Update(input model.CourseUpdateRequest) error {
 	return nil
 }
 
-func (r *CourseWriterRepo) Delete(id int64) error {
+func (r *ExamTypeWriterRepo) Delete(id int64) error {
 	query := `
-	UPDATE courses
+	UPDATE course_exam_types
 	SET
 		deleted_at = now()
 	WHERE 
