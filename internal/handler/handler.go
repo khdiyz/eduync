@@ -50,7 +50,8 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		users := api.Group("/users")
 		{
 			users.POST("", h.createUser)
-			// 	users.GET("/:id", h.getUserById)
+			users.GET("", h.getListUser)
+			// users.GET("/:id", h.getUserById)
 		}
 
 		roles := api.Group("/roles")
@@ -87,6 +88,15 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			lids.GET("/:id", h.getLidById)
 			lids.PUT("/:id", h.updateLid)
 			lids.DELETE("/:id", h.deleteLid)
+		}
+
+		groups := api.Group("/groups")
+		{
+			groups.POST("", h.createGroup)
+			groups.GET("", h.getListGroup)
+			groups.GET("/:id", h.getGroupById)
+			groups.PUT("/:id", h.updateGroup)
+			groups.DELETE("/:id", h.deleteGroup)
 		}
 	}
 

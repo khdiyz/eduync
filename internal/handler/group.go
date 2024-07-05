@@ -7,24 +7,25 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Create Lid
-// @Description Create Lid
-// @Summary Create Lid
-// @Tags Lid
+// Create Group
+// @Description Create Group
+// @Summary Create Group
+// @Tags Group
 // @Accept json
 // @Produce json
-// @Param create body model.LidCreateRequest true "Create Lid"
+// @Param create body model.GroupCreateRequest true "Create Group"
 // @Success 200 {object} model.BaseResponse
 // @Failure 400 {object} model.BaseResponse
 // @Failure 404 {object} model.BaseResponse
 // @Failure 500 {object} model.BaseResponse
-// @Router /api/lids [post]
+// @Router /api/groups [post]
 // @Security ApiKeyAuth
-func (h *Handler) createLid(c *gin.Context) {
+func (h *Handler) createGroup(c *gin.Context) {
 	var (
 		err   error
-		input model.LidCreateRequest
+		input model.GroupCreateRequest
 	)
+
 	if err = c.ShouldBindJSON(&input); err != nil {
 		errorResponse(c, BadRequest, err)
 		return
@@ -35,7 +36,7 @@ func (h *Handler) createLid(c *gin.Context) {
 		return
 	}
 
-	id, err := h.services.LidService.LidWriter.Create(input)
+	id, err := h.services.GroupService.GroupWriter.Create(input)
 	if err != nil {
 		fromError(c, err)
 		return
@@ -44,10 +45,10 @@ func (h *Handler) createLid(c *gin.Context) {
 	successResponse(c, Created, id, nil)
 }
 
-// Get List Lid
-// @Description Get List Lid
-// @Summary Get List Lid
-// @Tags Lid
+// Get List Group
+// @Description Get List Group
+// @Summary Get List Group
+// @Tags Group
 // @Accept json
 // @Produce json
 // @Param pageSize query int64 true "pageSize" default(10)
@@ -56,69 +57,69 @@ func (h *Handler) createLid(c *gin.Context) {
 // @Failure 400 {object} model.BaseResponse
 // @Failure 404 {object} model.BaseResponse
 // @Failure 500 {object} model.BaseResponse
-// @Router /api/lids [get]
+// @Router /api/groups [get]
 // @Security ApiKeyAuth
-func (h *Handler) getListLid(c *gin.Context) {
+func (h *Handler) getListGroup(c *gin.Context) {
 	pagination, err := listPagination(c)
 	if err != nil {
 		errorResponse(c, BadRequest, err)
 		return
 	}
 
-	lids, err := h.services.LidService.LidReader.GetList(&pagination)
+	groups, err := h.services.GroupService.GroupReader.GetList(&pagination)
 	if err != nil {
 		fromError(c, err)
 		return
 	}
 
-	successResponse(c, OK, lids, &pagination)
+	successResponse(c, OK, groups, &pagination)
 }
 
-// Get Lid By Id
-// @Description Get Lid By Id
-// @Summary Get Lid By Id
-// @Tags Lid
+// Get Group By Id
+// @Description Get Group By Id
+// @Summary Get Group By Id
+// @Tags Group
 // @Accept json
 // @Produce json
-// @Param id path int64 true "Lid Id"
+// @Param id path int64 true "Group Id"
 // @Success 200 {object} model.BaseResponse
 // @Failure 400 {object} model.BaseResponse
 // @Failure 404 {object} model.BaseResponse
 // @Failure 500 {object} model.BaseResponse
-// @Router /api/lids/{id} [get]
+// @Router /api/groups/{id} [get]
 // @Security ApiKeyAuth
-func (h *Handler) getLidById(c *gin.Context) {
+func (h *Handler) getGroupById(c *gin.Context) {
 	id, err := getNullInt64Param(c, idQuery)
 	if err != nil {
 		errorResponse(c, BadRequest, err)
 		return
 	}
 
-	lid, err := h.services.LidService.LidReader.GetById(id)
+	group, err := h.services.GroupService.GroupReader.GetById(id)
 	if err != nil {
 		fromError(c, err)
 		return
 	}
 
-	successResponse(c, OK, lid, nil)
+	successResponse(c, OK, group, nil)
 }
 
-// Update Lid
-// @Description Update Lid
-// @Summary Update Lid
-// @Tags Lid
+// Update Group
+// @Description Update Group
+// @Summary Update Group
+// @Tags Group
 // @Accept json
 // @Produce json
-// @Param id path int64 true "Lid Id"
-// @Param update body model.LidUpdateRequest true "Update Lid"
+// @Param id path int64 true "Group Id"
+// @Param update body model.GroupUpdateRequest true "Update Group"
 // @Success 200 {object} model.BaseResponse
 // @Failure 400 {object} model.BaseResponse
 // @Failure 404 {object} model.BaseResponse
 // @Failure 500 {object} model.BaseResponse
-// @Router /api/lids/{id} [put]
+// @Router /api/groups/{id} [put]
 // @Security ApiKeyAuth
-func (h *Handler) updateLid(c *gin.Context) {
-	var input model.LidUpdateRequest
+func (h *Handler) updateGroup(c *gin.Context) {
+	var input model.GroupUpdateRequest
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 		errorResponse(c, BadRequest, err)
@@ -137,7 +138,7 @@ func (h *Handler) updateLid(c *gin.Context) {
 	}
 	input.Id = id
 
-	err = h.services.LidService.LidWriter.Update(input)
+	err = h.services.GroupService.GroupWriter.Update(input)
 	if err != nil {
 		fromError(c, err)
 		return
@@ -146,27 +147,27 @@ func (h *Handler) updateLid(c *gin.Context) {
 	successResponse(c, OK, nil, nil)
 }
 
-// Delete Lid
-// @Description Delete Lid
-// @Summary Delete Lid
-// @Tags Lid
+// Delete Group
+// @Description Delete Group
+// @Summary Delete Group
+// @Tags Group
 // @Accept json
 // @Produce json
-// @Param id path int64 true "Lid Id"
+// @Param id path int64 true "Group Id"
 // @Success 200 {object} model.BaseResponse
 // @Failure 400 {object} model.BaseResponse
 // @Failure 404 {object} model.BaseResponse
 // @Failure 500 {object} model.BaseResponse
-// @Router /api/lids/{id} [delete]
+// @Router /api/groups/{id} [delete]
 // @Security ApiKeyAuth
-func (h *Handler) deleteLid(c *gin.Context) {
+func (h *Handler) deleteGroup(c *gin.Context) {
 	id, err := getNullInt64Param(c, idQuery)
 	if err != nil {
 		errorResponse(c, BadRequest, err)
 		return
 	}
 
-	err = h.services.LidService.LidWriter.Delete(id)
+	err = h.services.GroupService.GroupWriter.Delete(id)
 	if err != nil {
 		fromError(c, err)
 		return

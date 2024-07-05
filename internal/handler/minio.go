@@ -72,5 +72,5 @@ func (h *Handler) uploadImage(c *gin.Context) {
 		}
 	}(fileMultipart)
 
-	successResponse(c, OK, imageFile)
+	successResponse(c, OK, imageFile, nil)
 }

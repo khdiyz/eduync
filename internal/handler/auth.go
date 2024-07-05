@@ -41,8 +41,7 @@ func (h *Handler) login(c *gin.Context) {
 	successResponse(c, OK, gin.H{
 		"accessToken":  accessToken.Token,
 		"refreshToken": refreshToken.Token,
-		"user":         accessToken.User,
-	})
+	}, nil)
 }
 
 // Refresh token
@@ -99,6 +98,5 @@ func (h *Handler) refresh(c *gin.Context) {
 	successResponse(c, OK, gin.H{
 		"accessToken":  accessToken.Token,
 		"refreshToken": refreshToken.Token,
-		"user":         accessToken.User,
-	})
+	}, nil)
 }

@@ -9,12 +9,13 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func successResponse(c *gin.Context, status Status, data interface{}) {
+func successResponse(c *gin.Context, status Status, data interface{}, pagination *model.Pagination) {
 	c.JSON(status.Code, model.BaseResponse{
 		Success:     true,
 		Status:      status.Status,
 		Description: status.Description,
 		Data:        data,
+		Pagination:  pagination,
 	})
 }
 

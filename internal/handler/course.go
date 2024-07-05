@@ -46,9 +46,7 @@ func (h *Handler) createCourse(c *gin.Context) {
 		return
 	}
 
-	successResponse(c, Created, gin.H{
-		"id": id,
-	})
+	successResponse(c, Created, id, nil)
 }
 
 // Get List Course
@@ -72,16 +70,13 @@ func (h *Handler) getListCourse(c *gin.Context) {
 		return
 	}
 
-	roles, err := h.services.CourseService.CourseReader.GetList(&pagination)
+	courses, err := h.services.CourseService.CourseReader.GetList(&pagination)
 	if err != nil {
 		fromError(c, err)
 		return
 	}
 
-	successResponse(c, OK, gin.H{
-		"list":       roles,
-		"pagination": pagination,
-	})
+	successResponse(c, OK, courses, &pagination)
 }
 
 // Get Course By Id
@@ -110,7 +105,7 @@ func (h *Handler) getCourseById(c *gin.Context) {
 		return
 	}
 
-	successResponse(c, OK, course)
+	successResponse(c, OK, course, nil)
 }
 
 // Update Course
@@ -153,7 +148,7 @@ func (h *Handler) updateCourse(c *gin.Context) {
 		return
 	}
 
-	successResponse(c, OK, nil)
+	successResponse(c, OK, nil, nil)
 }
 
 // Delete Course
@@ -182,7 +177,7 @@ func (h *Handler) deleteCourse(c *gin.Context) {
 		return
 	}
 
-	successResponse(c, OK, nil)
+	successResponse(c, OK, nil, nil)
 }
 
 // Create Course Exam Type
@@ -228,9 +223,7 @@ func (h *Handler) createCourseExamType(c *gin.Context) {
 		return
 	}
 
-	successResponse(c, Created, gin.H{
-		"id": id,
-	})
+	successResponse(c, Created, id, nil)
 }
 
 // Get List Course Exam Type
@@ -267,10 +260,7 @@ func (h *Handler) getListCourseExamType(c *gin.Context) {
 		return
 	}
 
-	successResponse(c, OK, gin.H{
-		"list":       examTypes,
-		"pagination": pagination,
-	})
+	successResponse(c, OK, examTypes, &pagination)
 }
 
 // Get List Course Exam Type
@@ -306,7 +296,7 @@ func (h *Handler) getCourseExamType(c *gin.Context) {
 		return
 	}
 
-	successResponse(c, OK, examType)
+	successResponse(c, OK, examType, nil)
 }
 
 // Update Course Exam Type
@@ -353,7 +343,7 @@ func (h *Handler) updateCourseExamType(c *gin.Context) {
 		return
 	}
 
-	successResponse(c, OK, nil)
+	successResponse(c, OK, nil, nil)
 }
 
 // Delete Course Exam Type
@@ -389,5 +379,5 @@ func (h *Handler) deleteCourseExamType(c *gin.Context) {
 		return
 	}
 
-	successResponse(c, OK, nil)
+	successResponse(c, OK, nil, nil)
 }

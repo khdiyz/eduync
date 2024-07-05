@@ -7,6 +7,8 @@ definitions:
         type: string
       message:
         type: string
+      pagination:
+        $ref: '#/definitions/model.Pagination'
       status:
         type: string
       success:
@@ -50,6 +52,32 @@ definitions:
       name:
         type: string
     type: object
+  model.GroupCreateRequest:
+    properties:
+      course_id:
+        type: integer
+      description:
+        type: string
+      mentor_id:
+        type: integer
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  model.GroupUpdateRequest:
+    properties:
+      course_id:
+        type: integer
+      description:
+        type: string
+      mentor_id:
+        type: integer
+      name:
+        type: string
+    required:
+    - name
+    type: object
   model.LidCreateRequest:
     properties:
       course_id:
@@ -84,6 +112,19 @@ definitions:
       username:
         default: superadmin
         type: string
+    type: object
+  model.Pagination:
+    properties:
+      item_total:
+        type: integer
+      page:
+        default: 1
+        type: integer
+      page_size:
+        default: 10
+        type: integer
+      page_total:
+        type: integer
     type: object
   model.RefreshRequest:
     properties:
@@ -517,6 +558,192 @@ paths:
       summary: Update Course Exam Type
       tags:
       - Course
+  /api/groups:
+    get:
+      consumes:
+      - application/json
+      description: Get List Group
+      parameters:
+      - default: 10
+        description: pageSize
+        in: query
+        name: pageSize
+        required: true
+        type: integer
+      - default: 1
+        description: page
+        in: query
+        name: page
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get List Group
+      tags:
+      - Group
+    post:
+      consumes:
+      - application/json
+      description: Create Group
+      parameters:
+      - description: Create Group
+        in: body
+        name: create
+        required: true
+        schema:
+          $ref: '#/definitions/model.GroupCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create Group
+      tags:
+      - Group
+  /api/groups/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Group
+      parameters:
+      - description: Group Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete Group
+      tags:
+      - Group
+    get:
+      consumes:
+      - application/json
+      description: Get Group By Id
+      parameters:
+      - description: Group Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Group By Id
+      tags:
+      - Group
+    put:
+      consumes:
+      - application/json
+      description: Update Group
+      parameters:
+      - description: Group Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update Group
+        in: body
+        name: update
+        required: true
+        schema:
+          $ref: '#/definitions/model.GroupUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update Group
+      tags:
+      - Group
   /api/lids:
     get:
       consumes:
@@ -784,6 +1011,51 @@ paths:
       tags:
       - Role
   /api/users:
+    get:
+      consumes:
+      - application/json
+      description: Get List User
+      parameters:
+      - description: filter by role id
+        in: query
+        name: role-id
+        type: integer
+      - default: 10
+        description: pageSize
+        in: query
+        name: pageSize
+        required: true
+        type: integer
+      - default: 1
+        description: page
+        in: query
+        name: page
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get List User
+      tags:
+      - User
     post:
       consumes:
       - application/json

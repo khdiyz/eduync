@@ -38,6 +38,7 @@ func (r *LidReaderRepo) GetList(pagination *model.Pagination) ([]model.Lid, erro
 		full_name,
 		COALESCE(phone_number, '') AS phone_number,
 		course_id,
+		(SELECT name FROM courses WHERE id = course_id) AS course_name,
 		COALESCE(description, '') AS description,
 		created_at,
 		updated_at
@@ -59,17 +60,18 @@ func (r *LidReaderRepo) GetById(id int64) (model.Lid, error) {
 
 	query := `
 	SELECT
-			id,
-			full_name,
-			COALESCE(phone_number, '') AS phone_number,
-			course_id,
-			COALESCE(description, '') AS description,
-			created_at,
-			updated_at
-		FROM lids
-		WHERE
-			id = $1
-			AND deleted_at IS NULL;`
+		id,
+		full_name,
+		COALESCE(phone_number, '') AS phone_number,
+		course_id,
+		(SELECT name FROM courses WHERE id = course_id) AS course_name,
+		COALESCE(description, '') AS description,
+		created_at,
+		updated_at
+	FROM lids
+	WHERE
+		id = $1
+		AND deleted_at IS NULL;`
 
 	if err := r.db.Get(&lid, query, id); err != nil {
 		r.logger.Error(err)

@@ -31,8 +31,5 @@ func (h *Handler) getListRole(c *gin.Context) {
 		return
 	}
 
-	successResponse(c, OK, gin.H{
-		"list":       roles,
-		"pagination": pagination,
-	})
+	successResponse(c, OK, roles, &pagination)
 }

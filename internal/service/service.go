@@ -17,6 +17,7 @@ type Service struct {
 	RoleService
 	CourseService
 	LidService
+	GroupService
 }
 
 func NewService(repos repository.Repository, storage storage.Storage, logger logger.Logger) *Service {
@@ -41,6 +42,10 @@ func NewService(repos repository.Repository, storage storage.Storage, logger log
 		LidService: LidService{
 			LidWriter: NewLidWriterService(repos, logger),
 			LidReader: NewLidReaderService(repos, logger),
+		},
+		GroupService: GroupService{
+			GroupReader: NewGroupReaderService(repos, logger),
+			GroupWriter: NewGroupWriterService(repos, logger),
 		},
 	}
 }
@@ -67,6 +72,7 @@ type UserService struct {
 type UserReader interface {
 	GetByUsername(username string) (model.User, error)
 	GetById(id int64) (model.User, error)
+	GetList(pagination *model.Pagination, filters map[string]interface{}) ([]model.User, error)
 }
 
 type UserWriter interface {
@@ -113,6 +119,7 @@ type ExamTypeReader interface {
 	GetById(courseId int64, examTypeId int64) (model.CourseExamType, error)
 }
 
+// Lid Service
 type LidService struct {
 	LidWriter
 	LidReader
@@ -127,4 +134,21 @@ type LidWriter interface {
 type LidReader interface {
 	GetList(pagination *model.Pagination) ([]model.Lid, error)
 	GetById(id int64) (model.Lid, error)
+}
+
+// Group Service
+type GroupService struct {
+	GroupReader
+	GroupWriter
+}
+
+type GroupReader interface {
+	GetList(pagination *model.Pagination) ([]model.Group, error)
+	GetById(id int64) (model.Group, error)
+}
+
+type GroupWriter interface {
+	Create(input model.GroupCreateRequest) (int64, error)
+	Update(input model.GroupUpdateRequest) error
+	Delete(id int64) error
 }

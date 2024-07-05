@@ -3,10 +3,13 @@ package model
 import "time"
 
 type Lid struct {
-	Id          int64      `json:"id" db:"id"`
-	FullName    string     `json:"full_name" db:"full_name"`
-	PhoneNumber string     `json:"phone_number" db:"phone_number"`
-	CourseId    int64      `json:"course_id" db:"course_id"`
+	Id          int64  `json:"id" db:"id"`
+	FullName    string `json:"full_name" db:"full_name"`
+	PhoneNumber string `json:"phone_number" db:"phone_number"`
+
+	CourseId   int64  `json:"course_id" db:"course_id"`
+	CourseName string `json:"course_name" db:"course_name"`
+
 	Description string     `json:"description" db:"description"`
 	CreatedAt   *time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt   *time.Time `json:"updated_at" db:"updated_at"`

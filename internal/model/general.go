@@ -17,6 +17,7 @@ type BaseResponse struct {
 	Description  string      `json:"description"`
 	Data         interface{} `json:"data,omitempty"`
 	ErrorMessage string      `json:"message,omitempty"`
+	Pagination   *Pagination `json:"pagination,omitempty"`
 }
 
 type Token struct {

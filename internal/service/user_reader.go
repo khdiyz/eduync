@@ -37,3 +37,12 @@ func (s *UserReaderService) GetById(id int64) (model.User, error) {
 
 	return user, err
 }
+
+func (s *UserReaderService) GetList(pagination *model.Pagination, filters map[string]interface{}) ([]model.User, error) {
+	users, err := s.repo.UserReader.GetList(pagination, filters)
+	if err != nil {
+		return nil, serviceError(err, codes.Internal)
+	}
+
+	return users, nil
+}
