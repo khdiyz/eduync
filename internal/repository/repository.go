@@ -13,6 +13,7 @@ type Repository struct {
 	CourseRepo
 	LidRepo
 	GroupRepo
+	StudentRepo
 }
 
 func NewRepository(db *sqlx.DB, logger logger.Logger) *Repository {
@@ -37,6 +38,10 @@ func NewRepository(db *sqlx.DB, logger logger.Logger) *Repository {
 		GroupRepo: GroupRepo{
 			GroupReader: NewGroupReaderRepo(db, logger),
 			GroupWriter: NewGroupWriterRepo(db, logger),
+		},
+		StudentRepo: StudentRepo{
+			StudentReader: NewStudentReaderRepo(db, logger),
+			StudentWriter: NewStudentWriterRepo(db, logger),
 		},
 	}
 }
@@ -128,5 +133,22 @@ type GroupReader interface {
 type GroupWriter interface {
 	Create(input model.GroupCreateRequest) (int64, error)
 	Update(input model.GroupUpdateRequest) error
+	Delete(id int64) error
+}
+
+// Student Repo
+type StudentRepo struct {
+	StudentReader
+	StudentWriter
+}
+
+type StudentReader interface {
+	GetList(pagination *model.Pagination) ([]model.Student, error)
+	GetById(id int64) (model.Student, error)
+}
+
+type StudentWriter interface {
+	Create(input model.StudentCreateRequest) (int64, error)
+	Update(input model.StudentUpdateRequest) error
 	Delete(id int64) error
 }

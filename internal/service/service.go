@@ -18,6 +18,7 @@ type Service struct {
 	CourseService
 	LidService
 	GroupService
+	StudentService
 }
 
 func NewService(repos repository.Repository, storage storage.Storage, logger logger.Logger) *Service {
@@ -46,6 +47,10 @@ func NewService(repos repository.Repository, storage storage.Storage, logger log
 		GroupService: GroupService{
 			GroupReader: NewGroupReaderService(repos, logger),
 			GroupWriter: NewGroupWriterService(repos, logger),
+		},
+		StudentService: StudentService{
+			StudentReader: NewStudentReaderService(repos, logger),
+			StudentWriter: NewStudentWriterService(repos, logger),
 		},
 	}
 }
@@ -150,5 +155,22 @@ type GroupReader interface {
 type GroupWriter interface {
 	Create(input model.GroupCreateRequest) (int64, error)
 	Update(input model.GroupUpdateRequest) error
+	Delete(id int64) error
+}
+
+// Student Service
+type StudentService struct {
+	StudentReader
+	StudentWriter
+}
+
+type StudentReader interface {
+	GetList(pagination *model.Pagination) ([]model.Student, error)
+	GetById(id int64) (model.Student, error)
+}
+
+type StudentWriter interface {
+	Create(input model.StudentCreateRequest) (int64, error)
+	Update(input model.StudentUpdateRequest) error
 	Delete(id int64) error
 }

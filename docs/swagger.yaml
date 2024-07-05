@@ -133,6 +133,38 @@ definitions:
     required:
     - token
     type: object
+  model.StudentCreateRequest:
+    properties:
+      address:
+        type: string
+      birth_year:
+        type: string
+      full_name:
+        type: string
+      parent_phone:
+        type: string
+      phone_number:
+        type: string
+    required:
+    - full_name
+    - phone_number
+    type: object
+  model.StudentUpdateRequest:
+    properties:
+      address:
+        type: string
+      birth_year:
+        type: string
+      full_name:
+        type: string
+      parent_phone:
+        type: string
+      phone_number:
+        type: string
+    required:
+    - full_name
+    - phone_number
+    type: object
   model.UserCreateRequest:
     properties:
       birth_date:
@@ -1010,6 +1042,192 @@ paths:
       summary: Get List Role
       tags:
       - Role
+  /api/students:
+    get:
+      consumes:
+      - application/json
+      description: Get List Student
+      parameters:
+      - default: 10
+        description: pageSize
+        in: query
+        name: pageSize
+        required: true
+        type: integer
+      - default: 1
+        description: page
+        in: query
+        name: page
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get List Student
+      tags:
+      - Student
+    post:
+      consumes:
+      - application/json
+      description: Create Student
+      parameters:
+      - description: Create Student
+        in: body
+        name: create
+        required: true
+        schema:
+          $ref: '#/definitions/model.StudentCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create Student
+      tags:
+      - Student
+  /api/students/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Student
+      parameters:
+      - description: Student Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete Student
+      tags:
+      - Student
+    get:
+      consumes:
+      - application/json
+      description: Get Student By Id
+      parameters:
+      - description: Student Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Student By Id
+      tags:
+      - Student
+    put:
+      consumes:
+      - application/json
+      description: Update Student
+      parameters:
+      - description: Student Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update Student
+        in: body
+        name: update
+        required: true
+        schema:
+          $ref: '#/definitions/model.StudentUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update Student
+      tags:
+      - Student
   /api/users:
     get:
       consumes:
