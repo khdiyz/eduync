@@ -78,6 +78,16 @@ definitions:
     required:
     - name
     type: object
+  model.JoinStudentRequest:
+    properties:
+      join_date:
+        type: string
+    type: object
+  model.LeftStudentRequest:
+    properties:
+      left_date:
+        type: string
+    type: object
   model.LidCreateRequest:
     properties:
       course_id:
@@ -180,7 +190,6 @@ definitions:
       username:
         type: string
     required:
-    - birth_date
     - full_name
     - password
     - phone_number
@@ -774,6 +783,98 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Update Group
+      tags:
+      - Group
+  /api/groups/{id}/join/{studentId}:
+    post:
+      consumes:
+      - application/json
+      description: Join Student to the Group
+      parameters:
+      - description: Group Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Student Id
+        in: path
+        name: studentId
+        required: true
+        type: integer
+      - description: Join Student
+        in: body
+        name: joinDate
+        required: true
+        schema:
+          $ref: '#/definitions/model.JoinStudentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Join Student to the Group
+      tags:
+      - Group
+  /api/groups/{id}/left/{studentId}:
+    put:
+      consumes:
+      - application/json
+      description: Left Student from the Group
+      parameters:
+      - description: Group Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Student Id
+        in: path
+        name: studentId
+        required: true
+        type: integer
+      - description: Left Student
+        in: body
+        name: leftDate
+        required: true
+        schema:
+          $ref: '#/definitions/model.LeftStudentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Left Student from the Group
       tags:
       - Group
   /api/lids:

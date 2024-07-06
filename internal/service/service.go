@@ -156,6 +156,8 @@ type GroupWriter interface {
 	Create(input model.GroupCreateRequest) (int64, error)
 	Update(input model.GroupUpdateRequest) error
 	Delete(id int64) error
+	JoinStudent(input model.JoinStudentRequest) error
+	LeftStudent(input model.LeftStudentRequest) error
 }
 
 // Student Service

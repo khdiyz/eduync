@@ -14,6 +14,7 @@ type Repository struct {
 	LidRepo
 	GroupRepo
 	StudentRepo
+	EnrollmentRepo
 }
 
 func NewRepository(db *sqlx.DB, logger logger.Logger) *Repository {
@@ -42,6 +43,10 @@ func NewRepository(db *sqlx.DB, logger logger.Logger) *Repository {
 		StudentRepo: StudentRepo{
 			StudentReader: NewStudentReaderRepo(db, logger),
 			StudentWriter: NewStudentWriterRepo(db, logger),
+		},
+		EnrollmentRepo: EnrollmentRepo{
+			EnrollmentReader: NewEnrollmentReaderRepo(db, logger),
+			EnrollmentWriter: NewEnrollmentWriterRepo(db, logger),
 		},
 	}
 }
@@ -151,4 +156,19 @@ type StudentWriter interface {
 	Create(input model.StudentCreateRequest) (int64, error)
 	Update(input model.StudentUpdateRequest) error
 	Delete(id int64) error
+}
+
+// Enrollment Repo
+type EnrollmentRepo struct {
+	EnrollmentReader
+	EnrollmentWriter
+}
+
+type EnrollmentWriter interface {
+	CreateEnrollment(input model.EnrollmentCreateRequest) (int64, error)
+	UpdateEnrollment(input model.EnrollmentUpdateRequest) error
+}
+
+type EnrollmentReader interface {
+	GetEnrollmentByStudentIdAndGroupId(studentId, groupId int64) (model.Enrollment, error)
 }
