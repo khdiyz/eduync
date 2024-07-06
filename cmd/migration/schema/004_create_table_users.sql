@@ -25,7 +25,7 @@ INSERT INTO "users" (
 ) VALUES (
     'Super Admin',
     '+998901234567',
-    CURRENT_DATE,
+    CURRENT_DATE::DATE,
     (SELECT "id" FROM "roles" WHERE "name" = 'SUPER ADMIN'),
     'superadmin',
     '6868616833326975734848736b6a64731481b6ea0a413bbee37199d0483c70388be8ea4c'

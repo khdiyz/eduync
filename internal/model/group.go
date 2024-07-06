@@ -31,3 +31,15 @@ type GroupUpdateRequest struct {
 	CourseId    int64  `json:"course_id" db:"course_id"`
 	TeacherId   int64  `json:"mentor_id" db:"teacher_id"`
 }
+
+type JoinStudentRequest struct {
+	GroupId   int64     `json:"-"`
+	StudentId int64     `json:"-"`
+	JoinDate  time.Time `json:"join_date"`
+}
+
+type LeftStudentRequest struct {
+	GroupId   int64     `json:"-"`
+	StudentId int64     `json:"-"`
+	LeftDate  time.Time `json:"left_date"`
+}

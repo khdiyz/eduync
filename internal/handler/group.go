@@ -175,3 +175,99 @@ func (h *Handler) deleteGroup(c *gin.Context) {
 
 	successResponse(c, OK, nil, nil)
 }
+
+// Join Student to the Group
+// @Description Join Student to the Group
+// @Summary Join Student to the Group
+// @Tags Group
+// @Accept json
+// @Produce json
+// @Param id path int64 true "Group Id"
+// @Param studentId path int64 true "Student Id"
+// @Param joinDate body model.JoinStudentRequest true "Join Student"
+// @Success 200 {object} model.BaseResponse
+// @Failure 400 {object} model.BaseResponse
+// @Failure 404 {object} model.BaseResponse
+// @Failure 500 {object} model.BaseResponse
+// @Router /api/groups/{id}/join/{studentId} [post]
+// @Security ApiKeyAuth
+func (h *Handler) joinStudent(c *gin.Context) {
+	var input model.JoinStudentRequest
+
+	if err := c.ShouldBindJSON(&input); err != nil {
+		errorResponse(c, BadRequest, err)
+		return
+	}
+
+	groupId, err := getNullInt64Param(c, idQuery)
+	if err != nil {
+		errorResponse(c, BadRequest, err)
+		return
+	}
+	input.GroupId = groupId
+
+	studentId, err := getNullInt64Param(c, idQuery)
+	if err != nil {
+		errorResponse(c, BadRequest, err)
+		return
+	}
+	input.StudentId = studentId
+
+	err = h.services.GroupService.GroupWriter.JoinStudent(input)
+	if err != nil {
+		fromError(c, err)
+		return
+	}
+
+	successResponse(c, OK, nil, nil)
+}
+
+// Left Student from the Group
+// @Description Left Student from the Group
+// @Summary Left Student from the Group
+// @Tags Group
+// @Accept json
+// @Produce json
+// @Param id path int64 true "Group Id"
+// @Param studentId path int64 true "Student Id"
+// @Param leftDate body model.LeftStudentRequest true "Left Student"
+// @Success 200 {object} model.BaseResponse
+// @Failure 400 {object} model.BaseResponse
+// @Failure 404 {object} model.BaseResponse
+// @Failure 500 {object} model.BaseResponse
+// @Router /api/groups/{id}/left/{studentId} [put]
+// @Security ApiKeyAuth
+func (h *Handler) leftStudent(c *gin.Context) {
+	var input model.LeftStudentRequest
+
+	if err := c.ShouldBindJSON(&input); err != nil {
+		errorResponse(c, BadRequest, err)
+		return
+	}
+
+	groupId, err := getNullInt64Param(c, idQuery)
+	if err != nil {
+		errorResponse(c, BadRequest, err)
+		return
+	}
+	input.GroupId = groupId
+
+	studentId, err := getNullInt64Param(c, idQuery)
+	if err != nil {
+		errorResponse(c, BadRequest, err)
+		return
+	}
+	input.StudentId = studentId
+
+	err = h.services.GroupService.GroupWriter.LeftStudent(input)
+	if err != nil {
+		fromError(c, err)
+		return
+	}
+
+	successResponse(c, OK, nil, nil)
+}
+
+func (h *Handler) freezeStudent(c *gin.Context) {
+
+}

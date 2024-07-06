@@ -18,12 +18,12 @@ type User struct {
 }
 
 type UserCreateRequest struct {
-	FullName    string `json:"full_name" db:"full_name" validate:"required"`
-	PhoneNumber string `json:"phone_number" db:"phone_number" validate:"uzbphone,required"`
-	BirthDate   string `json:"birth_date" db:"birth_date" validate:"customDate,required"`
-	RoleId      int64  `json:"role_id" db:"role_id"`
-	Username    string `json:"username" db:"username" validate:"required"`
-	Password    string `json:"password" db:"password" validate:"required"`
+	FullName    string    `json:"full_name" db:"full_name" validate:"required"`
+	PhoneNumber string    `json:"phone_number" db:"phone_number" validate:"uzbphone,required"`
+	BirthDate   time.Time `json:"birth_date" db:"birth_date"`
+	RoleId      int64     `json:"role_id" db:"role_id"`
+	Username    string    `json:"username" db:"username" validate:"required"`
+	Password    string    `json:"password" db:"password" validate:"required"`
 }
 
 type LoginRequest struct {
