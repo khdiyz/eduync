@@ -138,6 +138,10 @@ func (s *GroupWriterService) LeftStudent(input model.LeftStudentRequest) error {
 		return serviceError(errors.New("student is not group"), codes.InvalidArgument)
 	}
 
+	if input.LeftDate.Before(enrollment.JoinDate) {
+		return serviceError(errors.New("left date must be after join date"), codes.InvalidArgument)
+	}
+
 	if err = s.repo.EnrollmentWriter.UpdateEnrollment(model.EnrollmentUpdateRequest{
 		Id:        enrollment.Id,
 		StudentId: enrollment.StudentId,
