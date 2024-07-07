@@ -21,8 +21,8 @@ type StudentAction string
 const (
 	ActionJoined   StudentAction = "JOINED"
 	ActionLeft     StudentAction = "LEFT"
-	ActionFreeze   StudentAction = "FROZE"
-	ActionUnfreeze StudentAction = "UNFROZE"
+	ActionFreeze   StudentAction = "FROZEN"
+	ActionUnfreeze StudentAction = "UNFROZEN"
 	ActionPaid     StudentAction = "PAID"
 	ActionUnpaid   StudentAction = "UNPAID"
 )
