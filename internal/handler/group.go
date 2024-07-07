@@ -7,6 +7,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+const (
+	studentIdQuery = "student-id"
+)
+
 // Create Group
 // @Description Create Group
 // @Summary Create Group
@@ -183,13 +187,13 @@ func (h *Handler) deleteGroup(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param id path int64 true "Group Id"
-// @Param studentId path int64 true "Student Id"
+// @Param student-id path int64 true "Student Id"
 // @Param joinDate body model.JoinStudentRequest true "Join Student"
 // @Success 200 {object} model.BaseResponse
 // @Failure 400 {object} model.BaseResponse
 // @Failure 404 {object} model.BaseResponse
 // @Failure 500 {object} model.BaseResponse
-// @Router /api/groups/{id}/join/{studentId} [post]
+// @Router /api/groups/{id}/join/{student-id} [post]
 // @Security ApiKeyAuth
 func (h *Handler) joinStudent(c *gin.Context) {
 	var input model.JoinStudentRequest
@@ -229,13 +233,13 @@ func (h *Handler) joinStudent(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param id path int64 true "Group Id"
-// @Param studentId path int64 true "Student Id"
+// @Param student-id path int64 true "Student Id"
 // @Param leftDate body model.LeftStudentRequest true "Left Student"
 // @Success 200 {object} model.BaseResponse
 // @Failure 400 {object} model.BaseResponse
 // @Failure 404 {object} model.BaseResponse
 // @Failure 500 {object} model.BaseResponse
-// @Router /api/groups/{id}/left/{studentId} [put]
+// @Router /api/groups/{id}/left/{student-id} [put]
 // @Security ApiKeyAuth
 func (h *Handler) leftStudent(c *gin.Context) {
 	var input model.LeftStudentRequest
@@ -252,7 +256,7 @@ func (h *Handler) leftStudent(c *gin.Context) {
 	}
 	input.GroupId = groupId
 
-	studentId, err := getNullInt64Param(c, idQuery)
+	studentId, err := getNullInt64Param(c, studentIdQuery)
 	if err != nil {
 		errorResponse(c, BadRequest, err)
 		return
@@ -275,12 +279,12 @@ func (h *Handler) leftStudent(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param id path int64 true "Group Id"
-// @Param studentId path int64 true "Student Id"
+// @Param student-id path int64 true "Student Id"
 // @Success 200 {object} model.BaseResponse
 // @Failure 400 {object} model.BaseResponse
 // @Failure 404 {object} model.BaseResponse
 // @Failure 500 {object} model.BaseResponse
-// @Router /api/groups/{id}/freeze/{studentId} [put]
+// @Router /api/groups/{id}/freeze/{student-id} [put]
 // @Security ApiKeyAuth
 func (h *Handler) freezeStudent(c *gin.Context) {
 	var input model.FreezeStudentRequest
@@ -292,7 +296,7 @@ func (h *Handler) freezeStudent(c *gin.Context) {
 	}
 	input.GroupId = groupId
 
-	studentId, err := getNullInt64Param(c, idQuery)
+	studentId, err := getNullInt64Param(c, studentIdQuery)
 	if err != nil {
 		errorResponse(c, BadRequest, err)
 		return
@@ -315,12 +319,12 @@ func (h *Handler) freezeStudent(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param id path int64 true "Group Id"
-// @Param studentId path int64 true "Student Id"
+// @Param student-id path int64 true "Student Id"
 // @Success 200 {object} model.BaseResponse
 // @Failure 400 {object} model.BaseResponse
 // @Failure 404 {object} model.BaseResponse
 // @Failure 500 {object} model.BaseResponse
-// @Router /api/groups/{id}/unfreeze/{studentId} [put]
+// @Router /api/groups/{id}/unfreeze/{student-id} [put]
 // @Security ApiKeyAuth
 func (h *Handler) unfreezeStudent(c *gin.Context) {
 	var input model.UnfreezeStudentRequest
@@ -332,7 +336,7 @@ func (h *Handler) unfreezeStudent(c *gin.Context) {
 	}
 	input.GroupId = groupId
 
-	studentId, err := getNullInt64Param(c, idQuery)
+	studentId, err := getNullInt64Param(c, studentIdQuery)
 	if err != nil {
 		errorResponse(c, BadRequest, err)
 		return
