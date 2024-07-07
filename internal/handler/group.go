@@ -206,7 +206,7 @@ func (h *Handler) joinStudent(c *gin.Context) {
 	}
 	input.GroupId = groupId
 
-	studentId, err := getNullInt64Param(c, idQuery)
+	studentId, err := getNullInt64Param(c, "studentId")
 	if err != nil {
 		errorResponse(c, BadRequest, err)
 		return
