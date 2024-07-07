@@ -917,7 +917,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/groups/{id}/freeze/{studentId}": {
+        "/api/groups/{id}/freeze/{student-id}": {
             "put": {
                 "security": [
                     {
@@ -946,7 +946,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "Student Id",
-                        "name": "studentId",
+                        "name": "student-id",
                         "in": "path",
                         "required": true
                     }
@@ -979,7 +979,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/groups/{id}/join/{studentId}": {
+        "/api/groups/{id}/join/{student-id}": {
             "post": {
                 "security": [
                     {
@@ -1008,7 +1008,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "Student Id",
-                        "name": "studentId",
+                        "name": "student-id",
                         "in": "path",
                         "required": true
                     },
@@ -1050,7 +1050,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/groups/{id}/left/{studentId}": {
+        "/api/groups/{id}/left/{student-id}": {
             "put": {
                 "security": [
                     {
@@ -1079,7 +1079,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "Student Id",
-                        "name": "studentId",
+                        "name": "student-id",
                         "in": "path",
                         "required": true
                     },
@@ -1121,7 +1121,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/groups/{id}/unfreeze/{studentId}": {
+        "/api/groups/{id}/unfreeze/{student-id}": {
             "put": {
                 "security": [
                     {
@@ -1150,7 +1150,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "Student Id",
-                        "name": "studentId",
+                        "name": "student-id",
                         "in": "path",
                         "required": true
                     }

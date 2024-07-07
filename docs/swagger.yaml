@@ -785,7 +785,7 @@ paths:
       summary: Update Group
       tags:
       - Group
-  /api/groups/{id}/freeze/{studentId}:
+  /api/groups/{id}/freeze/{student-id}:
     put:
       consumes:
       - application/json
@@ -798,7 +798,7 @@ paths:
         type: integer
       - description: Student Id
         in: path
-        name: studentId
+        name: student-id
         required: true
         type: integer
       produces:
@@ -825,7 +825,7 @@ paths:
       summary: Freeze Student from Group
       tags:
       - Group
-  /api/groups/{id}/join/{studentId}:
+  /api/groups/{id}/join/{student-id}:
     post:
       consumes:
       - application/json
@@ -838,7 +838,7 @@ paths:
         type: integer
       - description: Student Id
         in: path
-        name: studentId
+        name: student-id
         required: true
         type: integer
       - description: Join Student
@@ -871,7 +871,7 @@ paths:
       summary: Join Student to the Group
       tags:
       - Group
-  /api/groups/{id}/left/{studentId}:
+  /api/groups/{id}/left/{student-id}:
     put:
       consumes:
       - application/json
@@ -884,7 +884,7 @@ paths:
         type: integer
       - description: Student Id
         in: path
-        name: studentId
+        name: student-id
         required: true
         type: integer
       - description: Left Student
@@ -917,7 +917,7 @@ paths:
       summary: Left Student from the Group
       tags:
       - Group
-  /api/groups/{id}/unfreeze/{studentId}:
+  /api/groups/{id}/unfreeze/{student-id}:
     put:
       consumes:
       - application/json
@@ -930,7 +930,7 @@ paths:
         type: integer
       - description: Student Id
         in: path
-        name: studentId
+        name: student-id
         required: true
         type: integer
       produces:
