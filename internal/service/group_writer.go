@@ -85,6 +85,16 @@ func (s *GroupWriterService) Delete(id int64) error {
 }
 
 func (s *GroupWriterService) JoinStudent(input model.JoinStudentRequest) error {
+	_, err := s.repo.StudentReader.GetById(input.StudentId)
+	if err != nil {
+		return serviceError(errors.New("student not found"), codes.InvalidArgument)
+	}
+
+	_, err = s.repo.GroupReader.GetById(input.GroupId)
+	if err != nil {
+		return serviceError(errors.New("group not found"), codes.InvalidArgument)
+	}
+
 	joinDate := helper.TruncateTime(input.JoinDate)
 
 	if joinDate.IsZero() {
