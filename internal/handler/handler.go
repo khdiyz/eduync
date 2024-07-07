@@ -97,10 +97,10 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			groups.GET("/:id", h.getGroupById)
 			groups.PUT("/:id", h.updateGroup)
 			groups.DELETE("/:id", h.deleteGroup)
-			groups.POST("/:id/join/:studentId", h.joinStudent)
-			groups.PUT("/:id/left/:studentId", h.leftStudent)
-			groups.PUT("/:id/freeze/:studentId", h.freezeStudent)
-			groups.PUT("/:id/unfreeze/:studentId", h.unfreezeStudent)
+			groups.POST("/:id/join/:student-id", h.joinStudent)
+			groups.PUT("/:id/left/:student-id", h.leftStudent)
+			groups.PUT("/:id/freeze/:student-id", h.freezeStudent)
+			groups.PUT("/:id/unfreeze/:student-id", h.unfreezeStudent)
 		}
 
 		students := api.Group("/students")
