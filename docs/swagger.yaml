@@ -80,12 +80,12 @@ definitions:
     type: object
   model.JoinStudentRequest:
     properties:
-      join_date:
+      date:
         type: string
     type: object
   model.LeftStudentRequest:
     properties:
-      left_date:
+      date:
         type: string
     type: object
   model.LidCreateRequest:
@@ -785,6 +785,46 @@ paths:
       summary: Update Group
       tags:
       - Group
+  /api/groups/{id}/freeze/{studentId}:
+    put:
+      consumes:
+      - application/json
+      description: Freeze Student from Group
+      parameters:
+      - description: Group Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Student Id
+        in: path
+        name: studentId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Freeze Student from Group
+      tags:
+      - Group
   /api/groups/{id}/join/{studentId}:
     post:
       consumes:
@@ -875,6 +915,46 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Left Student from the Group
+      tags:
+      - Group
+  /api/groups/{id}/unfreeze/{studentId}:
+    put:
+      consumes:
+      - application/json
+      description: Unfreeze Student Group
+      parameters:
+      - description: Group Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Student Id
+        in: path
+        name: studentId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Unfreeze Student Group
       tags:
       - Group
   /api/lids:
@@ -1327,6 +1407,41 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Update Student
+      tags:
+      - Student
+  /api/students/{id}/actions:
+    get:
+      consumes:
+      - application/json
+      description: Get List Student Actions
+      parameters:
+      - description: Student Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get List Student Actions
       tags:
       - Student
   /api/users:

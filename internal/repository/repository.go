@@ -150,12 +150,14 @@ type StudentRepo struct {
 type StudentReader interface {
 	GetList(pagination *model.Pagination) ([]model.Student, error)
 	GetById(id int64) (model.Student, error)
+	GetActions(studentId int64) ([]model.StudentAction, error)
 }
 
 type StudentWriter interface {
 	Create(input model.StudentCreateRequest) (int64, error)
 	Update(input model.StudentUpdateRequest) error
 	Delete(id int64) error
+	CreateAction(input model.StudentActionCreateRequest) (int64, error)
 }
 
 // Enrollment Repo

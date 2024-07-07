@@ -4,6 +4,7 @@ import (
 	"edusync/internal/constants"
 	"edusync/internal/model"
 	"edusync/internal/repository"
+	"edusync/pkg/helper"
 	"edusync/pkg/logger"
 	"errors"
 	"time"
@@ -84,9 +85,11 @@ func (s *GroupWriterService) Delete(id int64) error {
 }
 
 func (s *GroupWriterService) JoinStudent(input model.JoinStudentRequest) error {
-	if input.JoinDate.IsZero() {
+	joinDate := helper.TruncateTime(input.JoinDate)
+
+	if joinDate.IsZero() {
 		return serviceError(errors.New("join date required"), codes.InvalidArgument)
-	} else if input.JoinDate.After(time.Now()) {
+	} else if joinDate.After(time.Now()) {
 		return serviceError(errors.New("join date must be before now"), codes.InvalidArgument)
 	}
 
@@ -107,14 +110,32 @@ func (s *GroupWriterService) JoinStudent(input model.JoinStudentRequest) error {
 			return serviceError(err, codes.Internal)
 		}
 
+		if _, err = s.repo.StudentRepo.StudentWriter.CreateAction(model.StudentActionCreateRequest{
+			StudentId:  input.StudentId,
+			GroupId:    input.GroupId,
+			ActionName: constants.ActionJoined,
+			ActionDate: joinDate,
+		}); err != nil {
+			return serviceError(err, codes.Internal)
+		}
+
 		return nil
 	}
 
 	if _, err = s.repo.EnrollmentWriter.CreateEnrollment(model.EnrollmentCreateRequest{
 		StudentId: input.StudentId,
 		GroupId:   input.GroupId,
-		JoinDate:  input.JoinDate,
+		JoinDate:  joinDate,
 		Status:    string(constants.EnrollmentStatusActive),
+	}); err != nil {
+		return serviceError(err, codes.Internal)
+	}
+
+	if _, err = s.repo.StudentRepo.StudentWriter.CreateAction(model.StudentActionCreateRequest{
+		StudentId:  input.StudentId,
+		GroupId:    input.GroupId,
+		ActionName: constants.ActionJoined,
+		ActionDate: joinDate,
 	}); err != nil {
 		return serviceError(err, codes.Internal)
 	}
@@ -123,9 +144,11 @@ func (s *GroupWriterService) JoinStudent(input model.JoinStudentRequest) error {
 }
 
 func (s *GroupWriterService) LeftStudent(input model.LeftStudentRequest) error {
-	if input.LeftDate.IsZero() {
+	leftDate := helper.TruncateTime(input.LeftDate)
+
+	if leftDate.IsZero() {
 		return serviceError(errors.New("left date required"), codes.InvalidArgument)
-	} else if input.LeftDate.After(time.Now()) {
+	} else if leftDate.After(time.Now()) {
 		return serviceError(errors.New("left date must be before now"), codes.InvalidArgument)
 	}
 
@@ -138,7 +161,7 @@ func (s *GroupWriterService) LeftStudent(input model.LeftStudentRequest) error {
 		return serviceError(errors.New("student is not group"), codes.InvalidArgument)
 	}
 
-	if input.LeftDate.Before(enrollment.JoinDate) {
+	if leftDate.Before(enrollment.JoinDate) {
 		return serviceError(errors.New("left date must be after join date"), codes.InvalidArgument)
 	}
 
@@ -147,8 +170,109 @@ func (s *GroupWriterService) LeftStudent(input model.LeftStudentRequest) error {
 		StudentId: enrollment.StudentId,
 		GroupId:   enrollment.GroupId,
 		JoinDate:  enrollment.JoinDate,
-		LeftDate:  &input.LeftDate,
+		LeftDate:  &leftDate,
 		Status:    string(constants.EnrollmentStatusInactive),
+	}); err != nil {
+		return serviceError(err, codes.Internal)
+	}
+
+	if _, err = s.repo.StudentRepo.StudentWriter.CreateAction(model.StudentActionCreateRequest{
+		StudentId:  input.StudentId,
+		GroupId:    input.GroupId,
+		ActionName: constants.ActionLeft,
+		ActionDate: leftDate,
+	}); err != nil {
+		return serviceError(err, codes.Internal)
+	}
+
+	return nil
+}
+
+func (s *GroupWriterService) FreezeStudent(input model.FreezeStudentRequest) error {
+	freezeDate := helper.TruncateTime(time.Now())
+
+	enrollment, err := s.repo.EnrollmentReader.GetEnrollmentByStudentIdAndGroupId(input.StudentId, input.GroupId)
+	if err != nil {
+		return serviceError(err, codes.NotFound)
+	}
+
+	if enrollment.LeftDate != nil && enrollment.Status == string(constants.EnrollmentStatusInactive) {
+		return serviceError(errors.New("student already left from group"), codes.InvalidArgument)
+	} else if enrollment.Status == string(constants.EnrollmentStatusInactive) {
+		return serviceError(errors.New("student already graduated the group"), codes.InvalidArgument)
+	}
+
+	if freezeDate.Before(enrollment.JoinDate) {
+		return serviceError(errors.New("freeze date must be after join date"), codes.InvalidArgument)
+	}
+
+	if enrollment.Status == string(constants.EnrollmentStatusFrozen) {
+		return serviceError(errors.New("student already frozen"), codes.InvalidArgument)
+	}
+
+	if err = s.repo.EnrollmentWriter.UpdateEnrollment(model.EnrollmentUpdateRequest{
+		Id:        enrollment.Id,
+		StudentId: input.StudentId,
+		GroupId:   input.GroupId,
+		JoinDate:  enrollment.JoinDate,
+		LeftDate:  enrollment.LeftDate,
+		Status:    string(constants.EnrollmentStatusFrozen),
+	}); err != nil {
+		return serviceError(err, codes.Internal)
+	}
+
+	if _, err = s.repo.StudentRepo.StudentWriter.CreateAction(model.StudentActionCreateRequest{
+		StudentId:  input.StudentId,
+		GroupId:    input.GroupId,
+		ActionName: constants.ActionFreeze,
+		ActionDate: freezeDate,
+	}); err != nil {
+		return serviceError(err, codes.Internal)
+	}
+
+	return nil
+}
+
+func (s *GroupWriterService) UnfreezeStudent(input model.UnfreezeStudentRequest) error {
+	unfreezeDate := helper.TruncateTime(time.Now())
+
+	enrollment, err := s.repo.EnrollmentReader.GetEnrollmentByStudentIdAndGroupId(input.StudentId, input.GroupId)
+	if err != nil {
+		return serviceError(err, codes.NotFound)
+	}
+
+	if enrollment.Status != string(constants.EnrollmentStatusFrozen) {
+		if enrollment.LeftDate == nil && enrollment.Status == string(constants.EnrollmentStatusActive) {
+			return serviceError(errors.New("student already active"), codes.InvalidArgument)
+		}
+
+		if enrollment.LeftDate != nil && enrollment.Status == string(constants.EnrollmentStatusInactive) {
+			return serviceError(errors.New("student already left from group"), codes.InvalidArgument)
+		} else if enrollment.Status == string(constants.EnrollmentStatusInactive) {
+			return serviceError(errors.New("student already graduated the group"), codes.InvalidArgument)
+		}
+	}
+
+	if enrollment.Status != string(constants.EnrollmentStatusFrozen) {
+		return serviceError(errors.New("student not frozen"), codes.InvalidArgument)
+	}
+
+	if err = s.repo.EnrollmentWriter.UpdateEnrollment(model.EnrollmentUpdateRequest{
+		Id:        enrollment.Id,
+		StudentId: input.StudentId,
+		GroupId:   input.GroupId,
+		JoinDate:  enrollment.JoinDate,
+		LeftDate:  enrollment.LeftDate,
+		Status:    string(constants.EnrollmentStatusActive),
+	}); err != nil {
+		return serviceError(err, codes.Internal)
+	}
+
+	if _, err = s.repo.StudentRepo.StudentWriter.CreateAction(model.StudentActionCreateRequest{
+		StudentId:  input.StudentId,
+		GroupId:    input.GroupId,
+		ActionName: constants.ActionUnfreeze,
+		ActionDate: unfreezeDate,
 	}); err != nil {
 		return serviceError(err, codes.Internal)
 	}

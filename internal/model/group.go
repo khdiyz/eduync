@@ -35,11 +35,21 @@ type GroupUpdateRequest struct {
 type JoinStudentRequest struct {
 	GroupId   int64     `json:"-"`
 	StudentId int64     `json:"-"`
-	JoinDate  time.Time `json:"join_date"`
+	JoinDate  time.Time `json:"date"`
 }
 
 type LeftStudentRequest struct {
 	GroupId   int64     `json:"-"`
 	StudentId int64     `json:"-"`
-	LeftDate  time.Time `json:"left_date"`
+	LeftDate  time.Time `json:"date"`
+}
+
+type FreezeStudentRequest struct {
+	GroupId   int64 `json:"-"`
+	StudentId int64 `json:"-"`
+}
+
+type UnfreezeStudentRequest struct {
+	GroupId   int64 `json:"-"`
+	StudentId int64 `json:"-"`
 }

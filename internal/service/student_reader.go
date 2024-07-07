@@ -37,3 +37,12 @@ func (s *StudentReaderService) GetById(id int64) (model.Student, error) {
 
 	return student, nil
 }
+
+func (s *StudentReaderService) GetActions(studentId int64) ([]model.StudentAction, error) {
+	actions, err := s.repo.StudentRepo.StudentReader.GetActions(studentId)
+	if err != nil {
+		return nil, serviceError(err, codes.Internal)
+	}
+
+	return actions, nil
+}

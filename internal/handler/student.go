@@ -175,3 +175,32 @@ func (h *Handler) deleteStudent(c *gin.Context) {
 
 	successResponse(c, OK, nil, nil)
 }
+
+// Get List Student Actions
+// @Description Get List Student Actions
+// @Summary Get List Student Actions
+// @Tags Student
+// @Accept json
+// @Produce json
+// @Param id path int64 true "Student Id"
+// @Success 200 {object} model.BaseResponse
+// @Failure 400 {object} model.BaseResponse
+// @Failure 404 {object} model.BaseResponse
+// @Failure 500 {object} model.BaseResponse
+// @Router /api/students/{id}/actions [get]
+// @Security ApiKeyAuth
+func (h *Handler) getListStudentActions(c *gin.Context) {
+	studentId, err := getNullInt64Param(c, idQuery)
+	if err != nil {
+		errorResponse(c, BadRequest, err)
+		return
+	}
+
+	actions, err := h.services.StudentService.StudentReader.GetActions(studentId)
+	if err != nil {
+		fromError(c, err)
+		return
+	}
+
+	successResponse(c, OK, actions, nil)
+}

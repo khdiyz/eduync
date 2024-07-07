@@ -268,6 +268,82 @@ func (h *Handler) leftStudent(c *gin.Context) {
 	successResponse(c, OK, nil, nil)
 }
 
+// Freeze Student from Group
+// @Description Freeze Student from Group
+// @Summary Freeze Student from Group
+// @Tags Group
+// @Accept json
+// @Produce json
+// @Param id path int64 true "Group Id"
+// @Param studentId path int64 true "Student Id"
+// @Success 200 {object} model.BaseResponse
+// @Failure 400 {object} model.BaseResponse
+// @Failure 404 {object} model.BaseResponse
+// @Failure 500 {object} model.BaseResponse
+// @Router /api/groups/{id}/freeze/{studentId} [put]
+// @Security ApiKeyAuth
 func (h *Handler) freezeStudent(c *gin.Context) {
+	var input model.FreezeStudentRequest
 
+	groupId, err := getNullInt64Param(c, idQuery)
+	if err != nil {
+		errorResponse(c, BadRequest, err)
+		return
+	}
+	input.GroupId = groupId
+
+	studentId, err := getNullInt64Param(c, idQuery)
+	if err != nil {
+		errorResponse(c, BadRequest, err)
+		return
+	}
+	input.StudentId = studentId
+
+	err = h.services.GroupService.GroupWriter.FreezeStudent(input)
+	if err != nil {
+		fromError(c, err)
+		return
+	}
+
+	successResponse(c, OK, nil, nil)
+}
+
+// Unfreeze Student Group
+// @Description Unfreeze Student Group
+// @Summary Unfreeze Student Group
+// @Tags Group
+// @Accept json
+// @Produce json
+// @Param id path int64 true "Group Id"
+// @Param studentId path int64 true "Student Id"
+// @Success 200 {object} model.BaseResponse
+// @Failure 400 {object} model.BaseResponse
+// @Failure 404 {object} model.BaseResponse
+// @Failure 500 {object} model.BaseResponse
+// @Router /api/groups/{id}/unfreeze/{studentId} [put]
+// @Security ApiKeyAuth
+func (h *Handler) unfreezeStudent(c *gin.Context) {
+	var input model.UnfreezeStudentRequest
+
+	groupId, err := getNullInt64Param(c, idQuery)
+	if err != nil {
+		errorResponse(c, BadRequest, err)
+		return
+	}
+	input.GroupId = groupId
+
+	studentId, err := getNullInt64Param(c, idQuery)
+	if err != nil {
+		errorResponse(c, BadRequest, err)
+		return
+	}
+	input.StudentId = studentId
+
+	err = h.services.GroupService.GroupWriter.UnfreezeStudent(input)
+	if err != nil {
+		fromError(c, err)
+		return
+	}
+
+	successResponse(c, OK, nil, nil)
 }

@@ -79,3 +79,29 @@ func (r *StudentReaderRepo) GetById(id int64) (model.Student, error) {
 
 	return student, nil
 }
+
+func (r *StudentReaderRepo) GetActions(studentId int64) ([]model.StudentAction, error) {
+	var actions []model.StudentAction
+	query := `
+	SELECT
+		id,
+		student_id,
+		group_id,
+		(SELECT name FROM groups WHERE id = group_id) AS group_name,
+		action_name,
+		action_date,
+		created_at,
+		updated_at
+	FROM student_actions
+	WHERE
+		deleted_at IS NULL
+		AND student_id = $1;`
+
+	err := r.db.Select(&actions, query, studentId)
+	if err != nil {
+		r.logger.Error(err)
+		return nil, err
+	}
+
+	return actions, nil
+}

@@ -156,8 +156,11 @@ type GroupWriter interface {
 	Create(input model.GroupCreateRequest) (int64, error)
 	Update(input model.GroupUpdateRequest) error
 	Delete(id int64) error
+	// Student Actions
 	JoinStudent(input model.JoinStudentRequest) error
 	LeftStudent(input model.LeftStudentRequest) error
+	FreezeStudent(input model.FreezeStudentRequest) error
+	UnfreezeStudent(input model.UnfreezeStudentRequest) error
 }
 
 // Student Service
@@ -169,6 +172,7 @@ type StudentService struct {
 type StudentReader interface {
 	GetList(pagination *model.Pagination) ([]model.Student, error)
 	GetById(id int64) (model.Student, error)
+	GetActions(studentId int64) ([]model.StudentAction, error)
 }
 
 type StudentWriter interface {

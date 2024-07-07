@@ -15,3 +15,14 @@ const (
 	EnrollmentStatusInactive EnrollmentStatus = "INACTIVE"
 	EnrollmentStatusFrozen   EnrollmentStatus = "FROZEN"
 )
+
+type StudentAction string
+
+const (
+	ActionJoined   StudentAction = "JOINED"
+	ActionLeft     StudentAction = "LEFT"
+	ActionFreeze   StudentAction = "FROZE"
+	ActionUnfreeze StudentAction = "UNFROZE"
+	ActionPaid     StudentAction = "PAID"
+	ActionUnpaid   StudentAction = "UNPAID"
+)

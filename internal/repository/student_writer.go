@@ -103,3 +103,27 @@ func (r *StudentWriterRepo) Delete(id int64) error {
 
 	return nil
 }
+
+func (r *StudentWriterRepo) CreateAction(input model.StudentActionCreateRequest) (int64, error) {
+	var id int64
+
+	query := `
+	INSERT INTO student_actions (
+		student_id,
+		group_id,
+		action_name,
+		action_date
+	) VALUES ($1, $2, $3, $4) RETURNING id;`
+
+	if err := r.db.Get(&id, query,
+		input.StudentId,
+		input.GroupId,
+		input.ActionName,
+		input.ActionDate,
+	); err != nil {
+		r.logger.Error(err)
+		return 0, err
+	}
+
+	return id, nil
+}

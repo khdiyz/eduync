@@ -48,3 +48,7 @@ func IsValidPhoneNumber(phoneNumber string) (bool, error) {
 
 	return true, nil
 }
+
+func TruncateTime(input time.Time) time.Time {
+	return input.Truncate(24 * time.Hour)
+}
