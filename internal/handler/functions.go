@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -108,4 +109,10 @@ func getNullInt64Query(c *gin.Context, queryName string) (int64, error) {
 	}
 
 	return 0, nil
+}
+
+func getNullStringQuery(c *gin.Context, queryName string) string {
+	queryData := c.Query(queryName)
+	queryData = strings.Trim(queryData, " ")
+	return queryData
 }

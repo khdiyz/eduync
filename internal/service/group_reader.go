@@ -4,6 +4,7 @@ import (
 	"edusync/internal/model"
 	"edusync/internal/repository"
 	"edusync/pkg/logger"
+	"errors"
 
 	"google.golang.org/grpc/codes"
 )
@@ -36,4 +37,17 @@ func (s *GroupReaderService) GetById(id int64) (model.Group, error) {
 	}
 
 	return group, nil
+}
+
+func (s *GroupReaderService) GetGroupStudents(request model.GetGroupStudentsRequest) ([]model.Student, error) {
+	if request.StudentType != "ACTIVE" && request.StudentType != "FROZEN" && request.StudentType != "LEFT" {
+		return nil, serviceError(errors.New("invalid student type"), codes.InvalidArgument)
+	}
+
+	students, err := s.repo.GroupReader.GetGroupStudents(request)
+	if err != nil {
+		return nil, serviceError(err, codes.Internal)
+	}
+
+	return students, nil
 }

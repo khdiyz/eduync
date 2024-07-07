@@ -53,3 +53,9 @@ type UnfreezeStudentRequest struct {
 	GroupId   int64 `json:"-"`
 	StudentId int64 `json:"-"`
 }
+
+type GetGroupStudentsRequest struct {
+	GroupId     int64
+	StudentType string
+	Pagination  *Pagination
+}

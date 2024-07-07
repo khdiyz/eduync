@@ -917,6 +917,62 @@ paths:
       summary: Left Student from the Group
       tags:
       - Group
+  /api/groups/{id}/students:
+    get:
+      consumes:
+      - application/json
+      description: Get List Group Students
+      parameters:
+      - description: Group Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: type of students
+        enum:
+        - ACTIVE
+        - FROZEN
+        - LEFT
+        in: query
+        name: type
+        required: true
+        type: string
+      - default: 10
+        description: pageSize
+        in: query
+        name: pageSize
+        required: true
+        type: integer
+      - default: 1
+        description: page
+        in: query
+        name: page
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/model.BaseResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get List Group Students
+      tags:
+      - Group
   /api/groups/{id}/unfreeze/{student-id}:
     put:
       consumes:

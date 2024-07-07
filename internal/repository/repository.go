@@ -133,6 +133,7 @@ type GroupRepo struct {
 type GroupReader interface {
 	GetList(pagination *model.Pagination) ([]model.Group, error)
 	GetById(id int64) (model.Group, error)
+	GetGroupStudents(request model.GetGroupStudentsRequest) ([]model.Student, error)
 }
 
 type GroupWriter interface {

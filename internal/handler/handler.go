@@ -101,6 +101,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			groups.PUT("/:id/left/:student-id", h.leftStudent)
 			groups.PUT("/:id/freeze/:student-id", h.freezeStudent)
 			groups.PUT("/:id/unfreeze/:student-id", h.unfreezeStudent)
+			groups.GET("/:id/students", h.getGroupStudents)
 		}
 
 		students := api.Group("/students")

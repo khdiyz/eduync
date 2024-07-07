@@ -351,3 +351,47 @@ func (h *Handler) unfreezeStudent(c *gin.Context) {
 
 	successResponse(c, OK, nil, nil)
 }
+
+// Get List Group Students
+// @Description Get List Group Students
+// @Summary Get List Group Students
+// @Tags Group
+// @Accept json
+// @Produce json
+// @Param id path int64 true "Group Id"
+// @Param type query string true "type of students" Enums(ACTIVE, FROZEN, LEFT)
+// @Param pageSize query int64 true "pageSize" default(10)
+// @Param page  query int64 true "page" default(1)
+// @Success 200 {object} model.BaseResponse
+// @Failure 400 {object} model.BaseResponse
+// @Failure 404 {object} model.BaseResponse
+// @Failure 500 {object} model.BaseResponse
+// @Router /api/groups/{id}/students [get]
+// @Security ApiKeyAuth
+func (h *Handler) getGroupStudents(c *gin.Context) {
+	groupId, err := getNullInt64Param(c, idQuery)
+	if err != nil {
+		errorResponse(c, BadRequest, err)
+		return
+	}
+
+	pagination, err := listPagination(c)
+	if err != nil {
+		errorResponse(c, BadRequest, err)
+		return
+	}
+
+	studentType := getNullStringQuery(c, "type")
+
+	students, err := h.services.GroupService.GroupReader.GetGroupStudents(model.GetGroupStudentsRequest{
+		GroupId:     groupId,
+		StudentType: studentType,
+		Pagination:  &pagination,
+	})
+	if err != nil {
+		fromError(c, err)
+		return
+	}
+
+	successResponse(c, OK, students, &pagination)
+}
