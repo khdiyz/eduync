@@ -3,14 +3,14 @@ services:
   backend:
      build: "./"
      restart: always
-     network_mode: host
      container_name: edusync-app
      labels:
        logging: "promtail"
        logging_jobname: "containerlogs"
      ports:
-        - 8080:8080
+        - "8080:8080"
+     networks:
+       - app
 networks:
-  default:
-    name: app
+  app:
     external: true
